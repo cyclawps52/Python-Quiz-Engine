@@ -211,9 +211,17 @@ def login(carryID, carryClass):
                 carryID[0] = username  # updates currently logged on user
                 
                 # get class to login to
+                from modules.classes import classCheck
+                classList = classCheck(silent=1, username=username)
+                if(classList == ""): # no classes registered
+                    print("User {0} is not registered for any classes.".format(username))
+                    print("Press ENTER to register for a class.")
+                    input()
+                    from modules.classes import classRegister
+                    classRegister(student=1, username=username)
+
                 while True: # until valid class is chosen
                     validChoice = False
-                    from modules.classes import classCheck
                     classList = classCheck(silent=1, username=username)
                     i = 0
                     menu = {}
@@ -222,28 +230,34 @@ def login(carryID, carryClass):
                         i += 1
                     menu.pop(0)
                     options = menu.keys()
-                    clear()
-                    print("Please select a class to login to: ")
-                    line()
-                    for entry in options:
-                        if(menu[entry][0] == "$"):
-                            print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
-                        else:
-                            print("{0}: {1}".format(entry, menu[entry]))
-                    try:
-                        classChoice = int(input("Selection: "))
-                    except:
-                        print("Invalid selection. Press ENTER to try again.")
-                        input()
-                    try:
-                        classChoice = menu[classChoice]
-                        validChoice = True
-                    except:
-                        print("Invalid selection. Press ENTER to try again.")
-                        input()
-                    if(validChoice):
+
+                    if(len(menu) == 1): # only one class, login to it
+                        classChoice = menu[1]
                         carryClass[0] = classChoice
                         break
+                    else:
+                        clear()
+                        print("Please select a class to login to: ")
+                        line()
+                        for entry in options:
+                            if(menu[entry][0] == "$"):
+                                print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
+                            else:
+                                print("{0}: {1}".format(entry, menu[entry]))
+                        try:
+                            classChoice = int(input("Selection: "))
+                        except:
+                            print("Invalid selection. Press ENTER to try again.")
+                            input()
+                        try:
+                            classChoice = menu[classChoice]
+                            validChoice = True
+                        except:
+                            print("Invalid selection. Press ENTER to try again.")
+                            input()
+                        if(validChoice):
+                            carryClass[0] = classChoice
+                            break
 
                 if(carryClass[0][0] == "$"):
                     isTeacher = True
@@ -392,7 +406,7 @@ def addUser():
     hashedPassword = hashlib.sha512(password.encode('utf-8')).hexdigest()
 
     # add user to database
-    newUser = [(username, hashedPassword, teacherFlag, str("," + initialClass + "!"))]
+    newUser = [(username, hashedPassword, str("," + initialClass + "!"))]
     dbCursor.executemany("INSERT INTO users VALUES(?,?,?)", newUser)
     db.commit()
 

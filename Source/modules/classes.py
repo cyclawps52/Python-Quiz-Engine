@@ -29,7 +29,7 @@ def classCheck(silent=0, username="NULL"):
         return 1
     
     #get classes and split string
-    classList = account[3]
+    classList = account[2]
     if(not bool(silent)):
         i = 0
         menu = {}
@@ -47,10 +47,10 @@ def classCheck(silent=0, username="NULL"):
 
     return classList
 
-def classRegister():
+def classRegister(student=0, username="NULL"):
     clear()
-
-    username = input("Username to enroll: ")
+    if(username=="NULL"):
+        username = input("Username to enroll: ")
     classList = classCheck(silent=1, username=username)
     if(classList == 1):
         return
@@ -68,7 +68,10 @@ def classRegister():
         # class is valid
 
         #check if user will be teaching the class
-        classTeacherFlag = int(input("Will {0} be teaching {1} (1=yes, 0=no): ".format(username, toRegister)))
+        if(student == 0):
+            classTeacherFlag = int(input("Will {0} be teaching {1} (1=yes, 0=no): ".format(username, toRegister)))
+        else:
+            classTeacherFlag = 0
         if(classTeacherFlag == 1):
             toRegister = "$" + toRegister
         elif(classTeacherFlag == 0):
