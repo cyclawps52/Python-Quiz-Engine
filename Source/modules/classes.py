@@ -39,7 +39,10 @@ def classCheck(silent=0, username="NULL"):
         menu.pop(0)
         options = menu.keys()
         for entry in options:
-            print("{0}: {1}".format(entry, menu[entry]))
+            if(menu[entry][0] == "$"):
+                print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
+            else:
+                print("{0}: {1}".format(entry, menu[entry]))
         input()
 
     return classList
@@ -55,7 +58,7 @@ def classRegister():
     toRegister = input("Class code to add: ")
 
     # check if user is in class
-    if str(","+ toRegister + "!") in classList:
+    if str("," + toRegister + "!") in classList or str(",$" + toRegister + "!") in classList:
         print("User \"{0}\" is already enrolled in \"{1}\". Press ENTER to return to main menu.".format(username, toRegister))
         input()
         return
@@ -63,12 +66,27 @@ def classRegister():
     classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + toRegister + "\\"))
     if(classPath.is_dir()):
         # class is valid
+
+        #check if user will be teaching the class
+        classTeacherFlag = int(input("Will {0} be teaching {1} (1=yes, 0=no): ".format(username, toRegister)))
+        if(classTeacherFlag == 1):
+            toRegister = "$" + toRegister
+        elif(classTeacherFlag == 0):
+            pass
+        else:
+            classTeacherFlag = 0
+            print("Invalid option, defaulting to student. Press ENTER to continue.")
+            input()
+
         db, dbCursor = connectToDatabase()
         classList += str("," + toRegister + "!")
         dbCursor.execute("UPDATE users SET classCodes=? WHERE username=?", [(classList), (username)])
         db.commit()
         db.close()
-        print("User \"{0}\" registered for \"{1}\". Press ENTER to return to main menu.".format(username, toRegister))
+        if(classTeacherFlag == 1):
+            print("User {0} registered for {1} as teacher. Press ENTER to return to main menu.".format(username, toRegister[1:]))
+        else:
+            print("User {0} registered for {1}. Press ENTER to return to main menu.".format(username, toRegister))
         input()
         return
 
@@ -88,6 +106,7 @@ def classDrop():
 
     while True: # Remain in drop mode until exit is selected
         goToDrop = False
+        invalidSelection = False
 
         # get updated class list and update menu
         classList = classCheck(silent=1, username=username)
@@ -102,7 +121,10 @@ def classDrop():
         clear()
         print("User \"{0}\" is registered for the following classes:".format(username))
         for entry in options:
-            print("{0}: {1}".format(entry, menu[entry]))
+            if(menu[entry][0] == "$"):
+                print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
+            else:
+                print("{0}: {1}".format(entry, menu[entry]))
         print("0: Return to Main Menu")
         line()
         try:
@@ -110,43 +132,47 @@ def classDrop():
         except:
             print("Invalid selection. Press ENTER to try again.")
             input()
+            invalidSelection = True
 
-        if(selection == 0): # exits if chosen
-            return
+        if(invalidSelection == False):
+            if(selection == 0): # exits if chosen
+                return
 
-        # selection validation
-        try:
-            toDrop = menu[selection]
-            goToDrop = True  
-        except:
-            print("Invalid selection. Press ENTER to try again.")
-            input()
+            # selection validation
+            try:
+                toDrop = menu[selection]
+                goToDrop = True  
+            except:
+                print("Invalid selection. Press ENTER to try again.")
+                input()
+                invalidSelection = True
 
-        if(goToDrop): # if the selection was valid
-            # drop the class
-            db, dbCursor = connectToDatabase()
-            
-            toDrop = "," + toDrop + "!"
-            classList = classList.replace(toDrop, "")
+            if(goToDrop): # if the selection was valid
+                # drop the class
+                db, dbCursor = connectToDatabase()
+                
+                toDrop = "," + toDrop + "!"
+                classList = classList.replace(toDrop, "")
 
-            dbCursor.execute("UPDATE users SET classCodes=? WHERE username=?", [(classList), (username)])
-            db.commit()
-            db.close()
+                dbCursor.execute("UPDATE users SET classCodes=? WHERE username=?", [(classList), (username)])
+                db.commit()
+                db.close()
 
-            print("User \"{0}\" dropped \"{1}\". Press ENTER to continue.".format(username, toDrop.replace(',', '').replace('!','')))
-            input()
+                print("User \"{0}\" dropped \"{1}\". Press ENTER to continue.".format(username, toDrop.replace(',', '').replace('!','').replace('$','')))
+                input()
 
-def classCreate():
+def classCreate(toCreate="NULL"):
     clear()
     
     while True:  # get class name until not blank, no commas, and no exclamation points
         clear()
-        toCreate = input("Class code to create: ")
+        if(toCreate == "NULL"):
+            toCreate = input("Class code to create: ")
         if(len(toCreate) == 0):
             print("Class name cannot be empty. Press ENTER to try again.")
             input()
-        if("," in toCreate or "!" in toCreate):
-            print("Class name cannot contain \' or !. Press ENTER to try again.")
+        if("," in toCreate or "!" in toCreate or "$" in toCreate):
+            print("Class name cannot contain \' or ! or $. Press ENTER to try again.")
             input()
         else:
             break
@@ -165,6 +191,6 @@ def classCreate():
         make_directory(toCreate)
         os.chdir("../")
         os.chdir("../")
-        print("Class \"{0}\" created. Press ENTER to return to main menu.".format(toCreate))
+        print("Class \"{0}\" created. Press ENTER to exit class creation.".format(toCreate))
         input()
         return

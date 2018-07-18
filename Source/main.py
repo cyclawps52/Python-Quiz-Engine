@@ -26,10 +26,11 @@ while True:
 		menu['D3'] = "DEBUG - classRegister()"
 		menu['D4'] = "DEBUG - classDrop()"
 		menu['D5'] = "DEBUG - classCreate()"
+		menu['D6'] = "DEBUG - addUser()"
 		while True:
 			# print menu
 			options = menu.keys()
-			os.system('cls')
+			clear()
 			for entry in options:
 				print("{0}: {1}".format(entry, menu[entry]))
 			print("------------------------------")
@@ -62,6 +63,10 @@ while True:
 				classCreate()
 				break
 
+			elif(selection == 'D6'):
+				addUser()
+				break
+
 			else:
 				print('Invalid option!')
 				print('Press ENTER to retry.')
@@ -81,7 +86,7 @@ while True:
 		while True:
 			# print menu
 			options = menu.keys()
-			os.system('cls')
+			clear()
 			print('Logged in as {0}'.format(carryID[0]))
 			line()
 			for entry in options:
@@ -129,7 +134,7 @@ while True:
 		while True:
 			# print menu
 			options = menu.keys()
-			os.system('cls')
+			clear()
 			print('Logged in as {0} | Teacher mode enabled!'.format(carryID[0]))
 			line()
 			for entry in options:

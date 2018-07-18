@@ -8,6 +8,7 @@ import uuid
 import importlib.util
 # custom imports
 from modules.custom import *
+from modules.classes import *
 
 # global variables
 global db, dbCursor
@@ -21,7 +22,6 @@ def debugDumpDatabase():
     print("\nPress ENTER to continue.")
     input()
     return
-
 
 def connectToDatabase():
     """
@@ -124,8 +124,8 @@ def checkIfFirstRun():
             if(len(initialClass) == 0):
                 print("Class name cannot be empty. Press ENTER to try again.")
                 input()
-            if("," in initialClass or "!" in initialClass):
-                print("Class name cannot contain \' or !. Press ENTER to try again.")
+            if("," in initialClass or "!" in initialClass or "$" in initialClass):
+                print("Class name cannot contain \' or ! or $. Press ENTER to try again.")
                 input()
             else:
                 break
@@ -139,18 +139,19 @@ def checkIfFirstRun():
         os.chdir("../")
         
         # add teacher to database
-        newUser = [(username, hashedPassword, 1, str("," + initialClass + "!"))]
+        newUser = [(username, hashedPassword, 1, str(",$" + initialClass + "!"))]
         dbCursor.executemany("INSERT INTO users VALUES(?,?,?,?)", newUser)
         db.commit()
 
         # add database completion check
-        checkUser = [('checkUser', 'SuperSecurePassword', '0', ',TEST101!,TEST202!,TEST303!,TEST404!')]  # creating setup completed user
+        checkUser = [('checkUser', 'SuperSecurePassword', '0', ',$TEST101!,TEST202!,TEST303!,$TEST404!')]  # creating setup completed user
         dbCursor.executemany("INSERT INTO users VALUES(?,?,?,?)", checkUser)
         db.commit()
    
     return -1
 
 def login(carryID):
+    db, dbCursor = connectToDatabase()
 
     attempts = 0
     while (attempts < 3): # repeat until logged in or three incorrect tries
@@ -227,3 +228,91 @@ def login(carryID):
     print("Three failed attempts, press ENTER to return to main menu.")
     input()
     return -1
+
+def addUser():
+    db, dbCursor = connectToDatabase()
+    while True:  # get username until not blank and not in database
+            clear()
+            username = input("Enter a username for the new account: ")
+            if(len(username) == 0):
+                print("Username cannot be empty. Press ENTER to try again.")
+                input()
+            else:
+                dbAccount = dbCursor.execute("SELECT * FROM users WHERE username=?", [(username)])
+                dbAccount = dbCursor.fetchall()
+                try:
+                    dbUsername = dbAccount[0][0]
+                    print("User {0} already exists. Press ENTER to try again.".format(username))
+                    input()
+                except:  # no user found with given username
+                    break
+
+    while True: # get passwords until they match
+        while True: # get first password until empty
+            clear()
+            password = getpass.getpass("Enter new password for {0}: ".format(username))
+            if(len(password)==0):
+                print("Password cannot be empty. Press ENTER to try again.")
+                input()
+            else:
+                break
+        password2 = getpass.getpass("Comfirm new password for {0}: ".format(username))
+        if(password == password2):
+            break # passwords match
+        else:
+            print("Passwords did not match, press ENTER to try again.")
+            input()
+
+    while True: # get teacher status
+        clear()
+        teacherFlag = int(input("Will this user be a teacher (1=yes, 0=no): "))
+        if(teacherFlag == 1 or teacherFlag == 0):
+            break
+        else:
+            print("Invalid option. Press ENTER to try again.")
+            input()
+
+    while True: # get class until valid
+        clear()
+        initialClass = input("Enter a class to add new user {0} to: ".format(username))
+        classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + initialClass + "\\"))
+        if(classPath.is_dir()):
+            # class exists
+            classTeacherFlag = int(input("Will {0} be teaching {1} (1=yes, 0=no): ".format(username, initialClass)))
+            if(classTeacherFlag == 1):
+                initialClass = "$" + initialClass
+            elif(classTeacherFlag == 0):
+                pass
+            else:
+                classTeacherFlag = 0
+                print("Invalid option, defaulting to student. Press ENTER to continue.")
+                input()
+            break
+        else:
+            # class does not exist, create it
+            while True: # until class name is valid
+                clear()
+                print("Class code {0} does not exist, entering class creation...".format(initialClass))
+                line()
+                if("," in initialClass or "!" in initialClass or "$" in initialClass):
+                    print("Class name cannot contain \' or ! or $. Press ENTER to rename class.")
+                    input()
+                    initialClass = input("Enter a class to add new user {0} to: ".format(username))
+                else:
+                    from modules.classes import classCreate
+                    clear()
+                    classCreate(toCreate=initialClass)
+                    break
+
+    # hash password to store in database
+    hashedPassword = hashlib.sha512(password.encode('utf-8')).hexdigest()
+
+    # add user to database
+    newUser = [(username, hashedPassword, teacherFlag, str("," + initialClass + "!"))]
+    dbCursor.executemany("INSERT INTO users VALUES(?,?,?,?)", newUser)
+    db.commit()
+
+    clear()
+    print("User {0} added to database! Press ENTER to exit user creation.".format(username))
+    input()
+    return
