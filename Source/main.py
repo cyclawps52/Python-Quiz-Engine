@@ -8,7 +8,7 @@ from modules import *
 global carryID
 carryID = ["NULL"]
 
-permissionLevel = checkIfFirstRun();
+permissionLevel = checkIfFirstRun()
 
 while True:
 	clear()
