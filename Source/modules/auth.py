@@ -76,7 +76,7 @@ def checkIfFirstRun():
         # create table setup
         dbCursor.execute("""
             CREATE TABLE users
-            (username text, password text, isTeacher int, classCodes text)
+            (username text, password text, classCodes text)
             """)
         db.commit()
         # database is now created
@@ -128,6 +128,9 @@ def checkIfFirstRun():
                 print("Class name cannot contain \' or ! or $. Press ENTER to try again.")
                 input()
             else:
+                print("Class code {0} will be created and {1} will be added as a teacher.".format(initialClass, username))
+                print("Press ENTER to continue.")
+                input()
                 break
         
         # create initial class folder
@@ -139,18 +142,18 @@ def checkIfFirstRun():
         os.chdir("../")
         
         # add teacher to database
-        newUser = [(username, hashedPassword, 1, str(",$" + initialClass + "!"))]
-        dbCursor.executemany("INSERT INTO users VALUES(?,?,?,?)", newUser)
+        newUser = [(username, hashedPassword, str(",$" + initialClass + "!"))]
+        dbCursor.executemany("INSERT INTO users VALUES(?,?,?)", newUser)
         db.commit()
 
         # add database completion check
-        checkUser = [('checkUser', 'SuperSecurePassword', '0', ',$TEST101!,TEST202!,TEST303!,$TEST404!')]  # creating setup completed user
-        dbCursor.executemany("INSERT INTO users VALUES(?,?,?,?)", checkUser)
+        checkUser = [('checkUser', 'SuperSecurePassword', '$TEST101!,TEST202!,TEST303!,$TEST404!')]  # creating setup completed user
+        dbCursor.executemany("INSERT INTO users VALUES(?,?,?)", checkUser)
         db.commit()
    
     return -1
 
-def login(carryID):
+def login(carryID, carryClass):
     db, dbCursor = connectToDatabase()
 
     attempts = 0
@@ -200,16 +203,55 @@ def login(carryID):
         if(not accountLookupFailed): # skips code if account was not found
             # user found, continuing
             dbPassword = dbAccount[0][1]
-            dbIsTeacher = bool(dbAccount[0][2])
 
             #hash given password to see if it matches database
             hashedPassword = hashlib.sha512(password.encode('utf-8')).hexdigest()
 
             if(dbPassword == hashedPassword):  # passwords match
                 carryID[0] = username  # updates currently logged on user
-                print("Logged in!")
-                if(dbIsTeacher):
-                    print("Teacher mode enabled!")
+                
+                # get class to login to
+                while True: # until valid class is chosen
+                    validChoice = False
+                    from modules.classes import classCheck
+                    classList = classCheck(silent=1, username=username)
+                    i = 0
+                    menu = {}
+                    for classCode in classList.split(','):
+                        menu[i] = classCode[:-1]
+                        i += 1
+                    menu.pop(0)
+                    options = menu.keys()
+                    clear()
+                    print("Please select a class to login to: ")
+                    line()
+                    for entry in options:
+                        if(menu[entry][0] == "$"):
+                            print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
+                        else:
+                            print("{0}: {1}".format(entry, menu[entry]))
+                    try:
+                        classChoice = int(input("Selection: "))
+                    except:
+                        print("Invalid selection. Press ENTER to try again.")
+                        input()
+                    try:
+                        classChoice = menu[classChoice]
+                        validChoice = True
+                    except:
+                        print("Invalid selection. Press ENTER to try again.")
+                        input()
+                    if(validChoice):
+                        carryClass[0] = classChoice
+                        break
+
+                if(carryClass[0][0] == "$"):
+                    isTeacher = True
+                else:
+                    isTeacher = False
+                    
+                # return permission level
+                if(isTeacher):
                     return 1 # logged in, activate teacher mode
                 return 0 # logged in, activate student mode
 
@@ -228,6 +270,57 @@ def login(carryID):
     print("Three failed attempts, press ENTER to return to main menu.")
     input()
     return -1
+
+def changeClass(carryID, carryClass):
+    while True:  # until valid class is chosen
+        validChoice = False
+        from modules.classes import classCheck
+        classList = classCheck(silent=1, username=carryID[0])
+        i = 0
+        menu = {}
+        for classCode in classList.split(','):
+            menu[i] = classCode[:-1]
+            i += 1
+        menu.pop(0)
+        options = menu.keys()
+        clear()
+        print("Please select a class to login to: ")
+        line()
+        for entry in options:
+            if(menu[entry][0] == "$"):
+                if(menu[entry] == carryClass[0]):
+                    print("{0}: {1} | TEACHER MODE ENABLED | (current class)".format(entry, menu[entry][1:]))
+                else:
+                    print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
+            else:
+                if(menu[entry] == carryClass[0]):
+                    print("{0}: {1} | TEACHER MODE ENABLED | (current class)".format(entry, menu[entry]))
+                else:
+                    print("{0}: {1}".format(entry, menu[entry]))
+        try:
+            classChoice = int(input("Selection: "))
+        except:
+            print("Invalid selection. Press ENTER to try again.")
+            input()
+        try:
+            classChoice = menu[classChoice]
+            validChoice = True
+        except:
+            print("Invalid selection. Press ENTER to try again.")
+            input()
+        if(validChoice):
+            carryClass[0] = classChoice
+            break
+
+    if(carryClass[0][0] == "$"):
+        isTeacher = True
+    else:
+        isTeacher = False
+        
+    # return permission level
+    if(isTeacher):
+        return 1 # logged in, activate teacher mode
+    return 0 # logged in, activate student mode
 
 def addUser():
     db, dbCursor = connectToDatabase()
@@ -261,15 +354,6 @@ def addUser():
             break # passwords match
         else:
             print("Passwords did not match, press ENTER to try again.")
-            input()
-
-    while True: # get teacher status
-        clear()
-        teacherFlag = int(input("Will this user be a teacher (1=yes, 0=no): "))
-        if(teacherFlag == 1 or teacherFlag == 0):
-            break
-        else:
-            print("Invalid option. Press ENTER to try again.")
             input()
 
     while True: # get class until valid
@@ -309,7 +393,7 @@ def addUser():
 
     # add user to database
     newUser = [(username, hashedPassword, teacherFlag, str("," + initialClass + "!"))]
-    dbCursor.executemany("INSERT INTO users VALUES(?,?,?,?)", newUser)
+    dbCursor.executemany("INSERT INTO users VALUES(?,?,?)", newUser)
     db.commit()
 
     clear()

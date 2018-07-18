@@ -4,7 +4,7 @@ import os
 # CUSTOM IMPORTS
 
 def line():
-    print('-----------------------------------')
+    print('-----------------------------------------------------------')
 
 def make_directory(name):
     os.makedirs(name)
