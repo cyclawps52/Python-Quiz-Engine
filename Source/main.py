@@ -15,6 +15,62 @@ permissionLevel = checkIfFirstRun()
 while True:
 	clear()
 	menuChoice = 0
+
+	if(carryClass[0] == "!DROP!"): # user dropped currently logged in class
+		while True:  # until valid class is chosen
+			validChoice = False
+			classList = classCheck(silent=1, username=carryID[0])
+			i = 0
+			menu = {}
+			for classCode in classList.split(','):
+				menu[i] = classCode[:-1]
+				i += 1
+			menu.pop(0)
+			options = menu.keys()
+
+			if(len(menu) == 1):  # only one class, login to it
+				if(menu[1][0] == "$"):
+					print("Dropped current class, switching to only remaining class \"{0}\".".format(menu[1][1:]))
+				else:
+					print("Dropped current class, switching to only remaining class \"{0}\".".format(menu[1]))
+				print("Press ENTER to continue.")
+				input()
+				classChoice = menu[1]
+				carryClass[0] = classChoice
+				break
+
+			elif(len(menu) == 0):
+				# no classes registered, begin registration
+				print("You have dropped all your currently registered classes.".format(username))
+				print("Press ENTER to register for a class.")
+				input()
+				classRegister(student=1, username=username)
+
+			else:
+				clear()
+				print("You dropped your currently logged in class.")
+				print("Please select a class to login to: ")
+				line()
+				for entry in options:
+					if(menu[entry][0] == "$"):
+						print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
+					else:
+						print("{0}: {1}".format(entry, menu[entry]))
+				try:
+					classChoice = int(input("Selection: "))
+				except:
+					print("Invalid selection. Press ENTER to try again.")
+					input()
+				try:
+					classChoice = menu[classChoice]
+					validChoice = True
+				except:
+					print("Invalid selection. Press ENTER to try again.")
+					input()
+				if(validChoice):
+					carryClass[0] = classChoice
+					break
+
 	if(permissionLevel == -2):
 		clear()
 		permissionLevel = checkIfFirstRun()
@@ -73,7 +129,7 @@ while True:
 				classCheck(username=carryID[0])
 				break
 			elif(selection == 'CD'):
-				classDrop(carryID[0])
+				classDrop(username=carryID[0], carryClass=carryClass[0])
 				break
 
 			elif(selection == 'CC'):
@@ -135,7 +191,7 @@ while True:
 				classCheck(username=carryID[0])
 				break
 			elif(selection == 'CD'):
-				classDrop(carryID[0])
+				carryClass[0] = classDrop(username=carryID[0], carryClass=carryClass[0])
 				break
 
 			elif(selection == 'CRO'):

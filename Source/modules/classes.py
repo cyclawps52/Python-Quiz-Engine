@@ -57,7 +57,7 @@ def classRegister(student=0, username="NULL"):
     if(classList == 1):
         return
     
-    toRegister = input("Class code to add: ")
+    toRegister = input("Class code to add: ").upper()
 
     # check if user is in class
     if str("," + toRegister + "!") in classList or str(",$" + toRegister + "!") in classList:
@@ -101,7 +101,7 @@ def classRegister(student=0, username="NULL"):
         input()
         return
 
-def classDrop(username="NULL"):
+def classDrop(username="NULL", carryClass="NULL"):
     clear()
     if(username == "NULL"):
         username = input("Username to drop: ")
@@ -163,8 +163,13 @@ def classDrop(username="NULL"):
                 db.commit()
                 db.close()
 
+                if(str("," + carryClass + "!") == toDrop):
+                    carryClass = "!DROP!"
+                    return carryClass
+
                 print("User \"{0}\" dropped \"{1}\". Press ENTER to continue.".format(username, toDrop.replace(',', '').replace('!','').replace('$','')))
                 input()
+                return carryClass
 
 def classCreate(toCreate="NULL", username="NULL"):
     clear()

@@ -120,7 +120,7 @@ def checkIfFirstRun():
             clear()
             print("FIRST TIME SETUP")
             line()
-            initialClass = input("Enter a name for the first class: ")
+            initialClass = input("Enter a name for the first class: ").upper()
             if(len(initialClass) == 0):
                 print("Class name cannot be empty. Press ENTER to try again.")
                 input()
