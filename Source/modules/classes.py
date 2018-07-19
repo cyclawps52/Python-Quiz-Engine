@@ -18,13 +18,14 @@ def classCheck(silent=0, username="NULL"):
 
     if(username=="NULL"):
         username = input("Username to check: ")
+    
     dbAccount = dbCursor.execute("SELECT * FROM users WHERE username=?", [(username)])
     dbAccount = dbCursor.fetchall()
 
     try: # see if account exists
         account = dbAccount[0]
     except:
-        print("User {0} not found. Press ENTER to return to main menu.".format(username))
+        print("User \"{0}\" not found. Press ENTER to return to main menu.".format(username))
         input()
         return 1
     
@@ -43,6 +44,7 @@ def classCheck(silent=0, username="NULL"):
                 print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
             else:
                 print("{0}: {1}".format(entry, menu[entry]))
+        print("Press ENTER to continue.")
         input()
 
     return classList
@@ -69,7 +71,7 @@ def classRegister(student=0, username="NULL"):
 
         #check if user will be teaching the class
         if(student == 0):
-            classTeacherFlag = int(input("Will {0} be teaching {1} (1=yes, 0=no): ".format(username, toRegister)))
+            classTeacherFlag = int(input("Will \"{0}\" be teaching \"{1}\" (1=yes, 0=no): ".format(username, toRegister)))
         else:
             classTeacherFlag = 0
         if(classTeacherFlag == 1):
@@ -87,9 +89,9 @@ def classRegister(student=0, username="NULL"):
         db.commit()
         db.close()
         if(classTeacherFlag == 1):
-            print("User {0} registered for {1} as teacher. Press ENTER to return to main menu.".format(username, toRegister[1:]))
+            print("User \"{0}\" registered for \"{1}\" as teacher. Press ENTER to return to main menu.".format(username, toRegister[1:]))
         else:
-            print("User {0} registered for {1}. Press ENTER to return to main menu.".format(username, toRegister))
+            print("User \"{0}\" registered for \"{1}\". Press ENTER to return to main menu.".format(username, toRegister))
         input()
         return
 
@@ -99,10 +101,10 @@ def classRegister(student=0, username="NULL"):
         input()
         return
 
-def classDrop():
+def classDrop(username="NULL"):
     clear()
-
-    username = input("Username to drop: ")
+    if(username == "NULL"):
+        username = input("Username to drop: ")
     classList = classCheck(silent=1, username=username)
     if(classList == 1):
         return
@@ -164,13 +166,13 @@ def classDrop():
                 print("User \"{0}\" dropped \"{1}\". Press ENTER to continue.".format(username, toDrop.replace(',', '').replace('!','').replace('$','')))
                 input()
 
-def classCreate(toCreate="NULL"):
+def classCreate(toCreate="NULL", username="NULL"):
     clear()
     
     while True:  # get class name until not blank, no commas, and no exclamation points
         clear()
         if(toCreate == "NULL"):
-            toCreate = input("Class code to create: ")
+            toCreate = input("Class code to create: ").upper()
         if(len(toCreate) == 0):
             print("Class name cannot be empty. Press ENTER to try again.")
             input()
@@ -183,7 +185,7 @@ def classCreate(toCreate="NULL"):
     classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + toCreate + "\\"))
     if(classPath.is_dir()):
         # class is already made
-        print("Class code \"{0}\" already exists. Press ENTER to continue.")
+        print("Class code \"{0}\" already exists. Press ENTER to continue.".format(toCreate))
         input()
         return
 
@@ -194,6 +196,17 @@ def classCreate(toCreate="NULL"):
         make_directory(toCreate)
         os.chdir("../")
         os.chdir("../")
-        print("Class \"{0}\" created. Press ENTER to exit class creation.".format(toCreate))
+
+        # add user as teacher
+        from modules.auth import connectToDatabase
+        db, dbCursor = connectToDatabase()
+        classList = classCheck(silent=1, username=username)
+        classList += str(",$" + toCreate + "!")
+        dbCursor.execute("UPDATE users SET classCodes=? WHERE username=?", [(classList), (username)])
+        db.commit()
+        db.close()
+
+        print("Class \"{0}\" created. You have been added as a teacher.".format(toCreate))
+        print("Press ENTER to close class creation.")
         input()
         return

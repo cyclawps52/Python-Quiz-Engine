@@ -13,15 +13,15 @@ from modules.classes import *
 # global variables
 global db, dbCursor
 
-def debugDumpDatabase():
-    clear()
-    db, dbCursor = connectToDatabase()
-    for user in dbCursor.execute("SELECT rowid, * FROM users"):
-	    print(user)
-    db.close()
-    print("\nPress ENTER to continue.")
-    input()
-    return
+def debugDumpDatabase(): # DEBUG
+    clear() # DEBUG
+    db, dbCursor = connectToDatabase() # DEBUG
+    for user in dbCursor.execute("SELECT rowid, * FROM users"): # DEBUG
+	    print(user) # DEBUG
+    db.close() # DEBUG
+    print("\nPress ENTER to continue.") # DEBUG
+    input() # DEBUG
+    return # DEBUG
 
 def connectToDatabase():
     """
@@ -100,13 +100,13 @@ def checkIfFirstRun():
                 clear()
                 print("FIRST TIME SETUP")
                 line()
-                password = getpass.getpass("Enter new password for {0}: ".format(username))
+                password = getpass.getpass("Enter new password for \"{0}\": ".format(username))
                 if(len(password)==0):
                     print("Password cannot be empty. Press ENTER to try again.")
                     input()
                 else:
                     break
-            password2 = getpass.getpass("Comfirm new password for {0}: ".format(username))
+            password2 = getpass.getpass("Comfirm new password for \"{0}\": ".format(username))
             if(password == password2):
                 break # passwords match
             else:
@@ -128,7 +128,7 @@ def checkIfFirstRun():
                 print("Class name cannot contain \' or ! or $. Press ENTER to try again.")
                 input()
             else:
-                print("Class code {0} will be created and {1} will be added as a teacher.".format(initialClass, username))
+                print("Class code \"{0}\" will be created and \"{1}\" will be added as a teacher.".format(initialClass, username))
                 print("Press ENTER to continue.")
                 input()
                 break
@@ -147,7 +147,7 @@ def checkIfFirstRun():
         db.commit()
 
         # add database completion check
-        checkUser = [('checkUser', 'SuperSecurePassword', '$TEST101!,TEST202!,TEST303!,$TEST404!')]  # creating setup completed user
+        checkUser = [('checkUser', 'SuperSecurePassword', ',$TEST101!,TEST202!,TEST303!,$TEST404!')]  # creating setup completed user
         dbCursor.executemany("INSERT INTO users VALUES(?,?,?)", checkUser)
         db.commit()
    
@@ -214,7 +214,7 @@ def login(carryID, carryClass):
                 from modules.classes import classCheck
                 classList = classCheck(silent=1, username=username)
                 if(classList == ""): # no classes registered
-                    print("User {0} is not registered for any classes.".format(username))
+                    print("User \"{0}\" is not registered for any classes.".format(username))
                     print("Press ENTER to register for a class.")
                     input()
                     from modules.classes import classRegister
@@ -289,7 +289,7 @@ def changeClass(carryID, carryClass):
     while True:  # until valid class is chosen
         validChoice = False
         from modules.classes import classCheck
-        classList = classCheck(silent=1, username=carryID[0])
+        classList = classCheck(silent=1, username=carryID)
         i = 0
         menu = {}
         for classCode in classList.split(','):
@@ -302,12 +302,12 @@ def changeClass(carryID, carryClass):
         line()
         for entry in options:
             if(menu[entry][0] == "$"):
-                if(menu[entry] == carryClass[0]):
+                if(menu[entry] == carryClass):
                     print("{0}: {1} | TEACHER MODE ENABLED | (current class)".format(entry, menu[entry][1:]))
                 else:
                     print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
             else:
-                if(menu[entry] == carryClass[0]):
+                if(menu[entry] == carryClass):
                     print("{0}: {1} | TEACHER MODE ENABLED | (current class)".format(entry, menu[entry]))
                 else:
                     print("{0}: {1}".format(entry, menu[entry]))
@@ -323,7 +323,7 @@ def changeClass(carryID, carryClass):
             print("Invalid selection. Press ENTER to try again.")
             input()
         if(validChoice):
-            carryClass[0] = classChoice
+            carryClass = classChoice
             break
 
     if(carryClass[0][0] == "$"):
@@ -349,7 +349,7 @@ def addUser():
                 dbAccount = dbCursor.fetchall()
                 try:
                     dbUsername = dbAccount[0][0]
-                    print("User {0} already exists. Press ENTER to try again.".format(username))
+                    print("User \"{0}\" already exists. Press ENTER to try again.".format(username))
                     input()
                 except:  # no user found with given username
                     break
@@ -357,13 +357,13 @@ def addUser():
     while True: # get passwords until they match
         while True: # get first password until empty
             clear()
-            password = getpass.getpass("Enter new password for {0}: ".format(username))
+            password = getpass.getpass("Enter new password for \"{0}\": ".format(username))
             if(len(password)==0):
                 print("Password cannot be empty. Press ENTER to try again.")
                 input()
             else:
                 break
-        password2 = getpass.getpass("Comfirm new password for {0}: ".format(username))
+        password2 = getpass.getpass("Comfirm new password for \"{0}\": ".format(username))
         if(password == password2):
             break # passwords match
         else:
@@ -372,11 +372,11 @@ def addUser():
 
     while True: # get class until valid
         clear()
-        initialClass = input("Enter a class to add new user {0} to: ".format(username))
+        initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username))
         classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + initialClass + "\\"))
         if(classPath.is_dir()):
             # class exists
-            classTeacherFlag = int(input("Will {0} be teaching {1} (1=yes, 0=no): ".format(username, initialClass)))
+            classTeacherFlag = int(input("Will \"{0}\" be teaching \"{1}\" (1=yes, 0=no): ".format(username, initialClass)))
             if(classTeacherFlag == 1):
                 initialClass = "$" + initialClass
             elif(classTeacherFlag == 0):
@@ -390,12 +390,12 @@ def addUser():
             # class does not exist, create it
             while True: # until class name is valid
                 clear()
-                print("Class code {0} does not exist, entering class creation...".format(initialClass))
+                print("Class code \"{0}\" does not exist, entering class creation...".format(initialClass))
                 line()
                 if("," in initialClass or "!" in initialClass or "$" in initialClass):
                     print("Class name cannot contain \' or ! or $. Press ENTER to rename class.")
                     input()
-                    initialClass = input("Enter a class to add new user {0} to: ".format(username))
+                    initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username))
                 else:
                     from modules.classes import classCreate
                     clear()
@@ -411,6 +411,9 @@ def addUser():
     db.commit()
 
     clear()
-    print("User {0} added to database! Press ENTER to exit user creation.".format(username))
+    if(classTeacherFlag == 0):
+        print("User \"{0}\" created and added to \"{1}\"! Press ENTER to exit user creation.".format(username, initialClass))
+    else:
+        print("User \"{0}\" created and added to \"{1}\" as a teacher! Press ENTER to exit user creation.".format(username, initialClass))
     input()
     return

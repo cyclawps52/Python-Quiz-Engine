@@ -18,121 +18,149 @@ while True:
 	if(permissionLevel == -2):
 		clear()
 		permissionLevel = checkIfFirstRun()
-	elif(permissionLevel == -1):
+	elif(permissionLevel == -1): # not logged in
 		# setup menu options
 		menu = {}
-		menu['1'] = "Login"
-		menu['0'] = "Exit Program"
-		menu['D1'] = "DEBUG - Dump Database"
-		menu['D2'] = "DEBUG - classCheck()"
-		menu['D3'] = "DEBUG - classRegister()"
-		menu['D4'] = "DEBUG - classDrop()"
-		menu['D5'] = "DEBUG - classCreate()"
-		menu['D6'] = "DEBUG - addUser()"
+		menu['LI'] = "Login"
+		menu['EP'] = "Exit Program"
+
 		while True:
 			# print menu
 			options = menu.keys()
 			clear()
 			for entry in options:
-				print("{0}: {1}".format(entry, menu[entry]))
+				print("{0}: {1}".format(entry.ljust(3), menu[entry]))
 			line()
-			selection = input("Selection: ")
+			selection = input("Selection: ").upper()
 			
-			if(selection == '1'):
+			if(selection == 'LI'):
 				permissionLevel = login(carryID, carryClass)
 				break
 
-			elif(selection == '0'):
+			elif(selection == 'EP'):
 				exit(0)
 
-			elif(selection == 'D1'):
-				debugDumpDatabase()
+			else:
+				print('Invalid option!')
+				print('Press ENTER to retry.')
+				input()
 				break
 
-			elif(selection == 'D2'):
-				classList = classCheck()
+	elif(permissionLevel == 0): # student permissions
+		# setup menu options
+		menu = {}
+		menu['CR'] = "Register for Class"
+		menu['CV'] = "View Registered Classes"
+		menu['CD'] = "Drop Class"
+		
+		menu['CC'] = "Change Class"
+		menu['LO'] = "Logout"
+		while True:
+			# print menu
+			options = menu.keys()
+			clear()
+			print('Logged in as \"{0}\" | Class: \"{1}\"'.format(carryID[0], carryClass[0]))
+			line()
+			for entry in options:
+				print("{0}: {1}".format(entry.ljust(3), menu[entry]))
+			line()
+			selection = input("Selection: ").upper()
+
+			if(selection == 'CR'):
+				classRegister(student=1, username=carryID[0])
+				break
+			elif(selection == 'CV'):
+				classCheck(username=carryID[0])
+				break
+			elif(selection == 'CD'):
+				classDrop(carryID[0])
 				break
 
-			elif(selection == 'D3'):
-				classRegister()
+			elif(selection == 'CC'):
+				permissionLevel = changeClass(carryID[0], carryClass[0])
+				break
+
+			elif(selection == 'LO'):
+				permissionLevel = -1
+				carryID[0] = "NULL"
+				carryClass[0] = "NULL"
+				break
+			else:
+				print('Invalid option!')
+				print('Press ENTER to retry.')
+				input()
+				break
+
+	elif(permissionLevel == 1): # teacher permissions
+		# setup menu options
+		menu = {}
+		menu['NU'] = "New User"
+		menu['NC'] = "New Class"
+		
+		menu['CR'] = "Register Self for Class"
+		menu['CV'] = "View Registered Classes for Self"
+		menu['CD'] = "Drop Class for Self"
+
+		menu['CRO'] = "Register Class for Other User"
+		menu['CVO'] = "View Registered Classes for Other User"
+		menu['CDO'] = "Drop Class for Other User"
+
+		menu['CC'] = "Change Class"
+		menu['LO'] = "Logout"
+
+		menu['DB1'] = "DEBUG: Dump Database"
+
+		while True:
+			# print menu
+			options = menu.keys()
+			clear()
+			print('Logged in as \"{0}\" | Class: \"{1}\" | Teacher mode enabled!'.format(carryID[0], carryClass[0][1:]))
+			line()
+			for entry in options:
+				print("{0}: {1}".format(entry.ljust(4), menu[entry]))
+			line()
+			selection = input("Selection: ").upper()
+		
+			if(selection == 'NU'):
+				addUser()
+				break
+			elif(selection == 'NC'):
+				classCreate(username=carryID[0])
 				break
 			
-			elif(selection == 'D4'):
+			elif(selection == 'CR'):
+				classRegister(student=1, username=carryID[0])
+				break
+			elif(selection == 'CV'):
+				classCheck(username=carryID[0])
+				break
+			elif(selection == 'CD'):
+				classDrop(carryID[0])
+				break
+
+			elif(selection == 'CRO'):
+				classRegister()
+				break
+			elif(selection == 'CVO'):
+				classCheck()
+				break
+			elif(selection == 'CDO'):
 				classDrop()
 				break
 
-			elif(selection == 'D5'):
-				classCreate()
+			elif(selection == 'CC'):
+				permissionLevel = changeClass(carryID[0], carryClass[0])
 				break
-
-			elif(selection == 'D6'):
-				addUser()
-				break
-
-			else:
-				print('Invalid option!')
-				print('Press ENTER to retry.')
-				input()
-				break
-
-	elif(permissionLevel == 0):
-		# setup menu options
-		menu = {}
-		menu['1'] = "Change Class"
-		menu['0'] = "Logout"
-		while True:
-			# print menu
-			options = menu.keys()
-			clear()
-			print('Logged in as {0} | Class: {1}'.format(carryID[0], carryClass[0]))
-			line()
-			for entry in options:
-				print("{0}: {1}".format(entry, menu[entry]))
-			line()
-			selection = input("Selection: ")
-
-			if(selection == '1'):
-				permissionLevel = changeClass(carryID, carryClass)
-				break
-			elif(selection == '0'):
+			elif(selection == 'LO'):
 				permissionLevel = -1
 				carryID[0] = "NULL"
 				carryClass[0] = "NULL"
 				break
-			else:
-				print('Invalid option!')
-				print('Press ENTER to retry.')
-				input()
-				break
 
-	elif(permissionLevel == 1):
-		# setup menu options
-		menu = {}
-		menu['1'] = "Create User"
-		menu['2'] = "Change Class"
-		menu['0'] = "Logout"
-		while True:
-			# print menu
-			options = menu.keys()
-			clear()
-			print('Logged in as {0}| Class: {1} | Teacher mode enabled!'.format(carryID[0], carryClass[0][1:]))
-			line()
-			for entry in options:
-				print("{0}: {1}".format(entry, menu[entry]))
-			line()
-			selection = input("Selection: ")
-		
-			if(selection == '1'):
-				addUser()
-				break
-			elif(selection == '2'):
-				permissionLevel = changeClass(carryID, carryClass)
-				break
-			elif(selection == '0'):
-				permissionLevel = -1
-				carryID[0] = "NULL"
-				carryClass[0] = "NULL"
-				break
+			elif(selection == 'DB1'): # DEBUG
+				debugDumpDatabase() # DEBUG
+				break #DEBUG
+
 			else:
 				print('Invalid option!')
 				print('Press ENTER to retry.')
