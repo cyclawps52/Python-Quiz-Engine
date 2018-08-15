@@ -152,6 +152,7 @@ while True:
 		menu = {}
 		menu['NU'] = "New User"
 		menu['NC'] = "New Class"
+		menu['NQ'] = "New Quiz"
 		
 		menu['CR'] = "Register Self for Class"
 		menu['CV'] = "View Registered Classes for Self"
@@ -182,6 +183,9 @@ while True:
 				break
 			elif(selection == 'NC'):
 				classCreate(username=carryID[0])
+				break
+			elif(selection == 'NQ'):
+				makeQuiz(carryID)
 				break
 			
 			elif(selection == 'CR'):

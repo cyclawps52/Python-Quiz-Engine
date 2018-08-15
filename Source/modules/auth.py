@@ -85,6 +85,12 @@ def checkIfFirstRun():
         clear()
         print("FIRST TIME SETUP")
         line()
+        print("This setup will generate a default teacher account as well as a starting class.")
+        print("This teacher user can create other teachers and students.")
+        print("Please ensure this application is being set up by an authorized user and not a student.")
+        print("Press ENTER to continue.")
+        line()
+        input()
         while True: # get username until not blank
             clear()
             print("FIRST TIME SETUP")
@@ -138,6 +144,9 @@ def checkIfFirstRun():
         make_directory("classes")
         os.chdir("classes")
         make_directory(initialClass)
+        os.chdir(initialClass)
+        make_directory("quizes")
+        os.chdir("../")
         os.chdir("../")
         os.chdir("../")
         

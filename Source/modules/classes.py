@@ -199,6 +199,9 @@ def classCreate(toCreate="NULL", username="NULL"):
         os.chdir("Source")
         os.chdir("classes")
         make_directory(toCreate)
+        os.chdir(toCreate)
+        make_directory("quizes")
+        os.chdir("../")
         os.chdir("../")
         os.chdir("../")
 
