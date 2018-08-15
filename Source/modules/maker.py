@@ -130,9 +130,6 @@ def makeQuiz(carryID):
             except:
                 print("Not a valid option, press ENTER to try again.")
                 input()
-        # write number of answers
-        for file in quizFiles:
-            file.write("A. {0}\n".format(numAs))
         # get answers
         line()
         for j in range(1, numAs+1):
