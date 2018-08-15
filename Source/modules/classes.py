@@ -17,7 +17,7 @@ def classCheck(silent=0, username="NULL"):
     db, dbCursor = connectToDatabase()
 
     if(username=="NULL"):
-        username = input("Username to check: ")
+        username = input("Username to check: ").upper()
     
     dbAccount = dbCursor.execute("SELECT * FROM users WHERE username=?", [(username)])
     dbAccount = dbCursor.fetchall()
@@ -52,7 +52,9 @@ def classCheck(silent=0, username="NULL"):
 def classRegister(student=0, username="NULL"):
     clear()
     if(username=="NULL"):
-        username = input("Username to enroll: ")
+        username = input("Username to enroll: ").upper()
+    else:
+        username = username.upper()
     classList = classCheck(silent=1, username=username)
     if(classList == 1):
         return
@@ -104,7 +106,9 @@ def classRegister(student=0, username="NULL"):
 def classDrop(username="NULL", carryClass="NULL"):
     clear()
     if(username == "NULL"):
-        username = input("Username to drop: ")
+        username = input("Username to drop: ").upper()
+    else:
+        username = username.upper()
     classList = classCheck(silent=1, username=username)
     if(classList == 1):
         return
@@ -178,11 +182,13 @@ def classCreate(toCreate="NULL", username="NULL"):
         clear()
         if(toCreate == "NULL"):
             toCreate = input("Class code to create: ").upper()
+        else:
+            toCreate = toCreate.upper()
         if(len(toCreate) == 0):
             print("Class name cannot be empty. Press ENTER to try again.")
             input()
         if("," in toCreate or "!" in toCreate or "$" in toCreate):
-            print("Class name cannot contain \' or ! or $. Press ENTER to try again.")
+            print("Class name cannot contain , or ! or $. Press ENTER to try again.")
             input()
         else:
             break
@@ -200,7 +206,7 @@ def classCreate(toCreate="NULL", username="NULL"):
         os.chdir("classes")
         make_directory(toCreate)
         os.chdir(toCreate)
-        make_directory("quizes")
+        make_directory("quizzes")
         os.chdir("../")
         os.chdir("../")
         os.chdir("../")

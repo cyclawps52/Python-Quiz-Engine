@@ -133,7 +133,7 @@ while True:
 				break
 
 			elif(selection == 'CC'):
-				permissionLevel = changeClass(carryID[0], carryClass[0])
+				permissionLevel, carryClass[0] = changeClass(carryID[0], carryClass[0])
 				break
 
 			elif(selection == 'LO'):
@@ -209,7 +209,7 @@ while True:
 				break
 
 			elif(selection == 'CC'):
-				permissionLevel = changeClass(carryID[0], carryClass[0])
+				permissionLevel, carryClass[0] = changeClass(carryID[0], carryClass[0])
 				break
 			elif(selection == 'LO'):
 				permissionLevel = -1

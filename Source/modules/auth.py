@@ -95,7 +95,7 @@ def checkIfFirstRun():
             clear()
             print("FIRST TIME SETUP")
             line()
-            username = input("Enter a username for the default teacher account: ")
+            username = input("Enter a username for the default teacher account: ").upper()
             if(len(username)==0):
                 print("Username cannot be empty. Press ENTER to try again.")
                 input()
@@ -131,7 +131,7 @@ def checkIfFirstRun():
                 print("Class name cannot be empty. Press ENTER to try again.")
                 input()
             if("," in initialClass or "!" in initialClass or "$" in initialClass):
-                print("Class name cannot contain \' or ! or $. Press ENTER to try again.")
+                print("Class name cannot contain , or ! or $. Press ENTER to try again.")
                 input()
             else:
                 print("Class code \"{0}\" will be created and \"{1}\" will be added as a teacher.".format(initialClass, username))
@@ -145,7 +145,7 @@ def checkIfFirstRun():
         os.chdir("classes")
         make_directory(initialClass)
         os.chdir(initialClass)
-        make_directory("quizes")
+        make_directory("quizzes")
         os.chdir("../")
         os.chdir("../")
         os.chdir("../")
@@ -169,7 +169,7 @@ def login(carryID, carryClass):
     while (attempts < 3): # repeat until logged in or three incorrect tries
         accountLookupFailed = False
         clear()
-        username = input("Username: ")
+        username = input("Username: ").upper()
         password = getpass.getpass()
 
         dbAccount = dbCursor.execute("SELECT * FROM users WHERE username=?", [(username)])
@@ -317,7 +317,7 @@ def changeClass(carryID, carryClass):
                     print("{0}: {1} | TEACHER MODE ENABLED".format(entry, menu[entry][1:]))
             else:
                 if(menu[entry] == carryClass):
-                    print("{0}: {1} | TEACHER MODE ENABLED | (current class)".format(entry, menu[entry]))
+                    print("{0}: {1} | (current class)".format(entry, menu[entry]))
                 else:
                     print("{0}: {1}".format(entry, menu[entry]))
         try:
@@ -342,14 +342,14 @@ def changeClass(carryID, carryClass):
         
     # return permission level
     if(isTeacher):
-        return 1 # logged in, activate teacher mode
-    return 0 # logged in, activate student mode
+        return 1, carryClass # logged in, activate teacher mode
+    return 0, carryClass # logged in, activate student mode
 
 def addUser():
     db, dbCursor = connectToDatabase()
     while True:  # get username until not blank and not in database
             clear()
-            username = input("Enter a username for the new account: ")
+            username = input("Enter a username for the new account: ").upper()
             if(len(username) == 0):
                 print("Username cannot be empty. Press ENTER to try again.")
                 input()
@@ -381,7 +381,7 @@ def addUser():
 
     while True: # get class until valid
         clear()
-        initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username))
+        initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username)).upper()
         classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + initialClass + "\\"))
         if(classPath.is_dir()):
             # class exists
@@ -404,7 +404,7 @@ def addUser():
                 if("," in initialClass or "!" in initialClass or "$" in initialClass):
                     print("Class name cannot contain \' or ! or $. Press ENTER to rename class.")
                     input()
-                    initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username))
+                    initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username)).upper()
                 else:
                     from modules.classes import classCreate
                     clear()
