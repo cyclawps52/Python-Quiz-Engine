@@ -41,7 +41,12 @@ def makeQuiz(carryID):
         print("QQ: CONFIRM SELECTION")
         classChoice = input("Selection: ").upper()
         if(classChoice == "QQ"):
-            break
+            if(len(includedList) == 0):
+                print("You must assign the quiz to at least one class.")
+                print("Press ENTER to retry.")
+                input()
+            else:
+                break
         elif(classChoice[0] == "A"):
             classInt = int(classChoice[1:])
             classChoice = notIncludedList[classInt]
@@ -57,18 +62,25 @@ def makeQuiz(carryID):
             input()
 
     # get quiz name
-    clear()
-    quizName = input("Name for quiz: ")
+    while True:
+        clear()
+        quizName = input("Name for quiz: ")
+        if(len(quizName) == 0):
+            print("Quiz name cannot be empty. Press ENTER to retry.")
+            input()
+        else:
+            break
+
 
     # open files for all classes
     i = 0
     quizFiles = []
     for classCode in includedList:
-        classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + classCode + "\\quizes\\"))
+        classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + classCode + "\\quizzes\\"))
         os.chdir("Source")
         os.chdir("classes")
         os.chdir(classCode)
-        os.chdir("quizes")
+        os.chdir("quizzes")
         try:
             make_directory(quizName)
         except:
