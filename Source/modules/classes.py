@@ -193,7 +193,7 @@ def classCreate(toCreate="NULL", username="NULL"):
         else:
             break
     
-    classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + toCreate + "\\"))
+    classPath = Path(str(os.getcwd() + "\\Source\\classes\\" + toCreate + "\\"))
     if(classPath.is_dir()):
         # class is already made
         print("Class code \"{0}\" already exists. Press ENTER to continue.".format(toCreate))
