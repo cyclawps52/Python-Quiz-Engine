@@ -88,6 +88,9 @@ def makeQuiz(carryID):
             input()
             return
         os.chdir(quizName)
+        # make quiz results and grades directories
+        make_directory("results")
+        make_directory("grades")
         quizFiles.append(open("{0}.quizfile".format(quizName), "w"))
         os.chdir("../")
         os.chdir("../")
