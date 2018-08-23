@@ -42,7 +42,7 @@ def checkIfFirstRun():
     # carry through global variables
     global db, dbCursor
 
-    pathToDatabase = str(os.getcwd() + "\\Source\\database\\auth.db")
+    pathToDatabase = str(os.getcwd() + "\\database\\auth.db")
     # check if database needs to be created
     my_file = Path(pathToDatabase)
     if my_file.is_file():
@@ -66,9 +66,7 @@ def checkIfFirstRun():
         
     else:
         # file does not exist, entering setup
-        os.chdir("Source")
         make_directory("database")
-        os.chdir("../")
 
         db = sqlite3.connect(pathToDatabase) # creates database file
         dbCursor = db.cursor() # creates database connection
@@ -140,13 +138,11 @@ def checkIfFirstRun():
                 break
         
         # create initial class folder
-        os.chdir("Source")
         make_directory("classes")
         os.chdir("classes")
         make_directory(initialClass)
         os.chdir(initialClass)
         make_directory("quizzes")
-        os.chdir("../")
         os.chdir("../")
         os.chdir("../")
         
@@ -189,25 +185,6 @@ def login(carryID, carryClass):
                     ocdText = "attempts"
                 print("Press ENTER to try again ({0} {1} until returned to main menu).".format(3 - attempts, ocdText))
                 input()
-        
-        # check if user is the checkUser and display easter egg
-        if(username == "checkUser"):
-            clear()
-            print("01000101 01111000 01100011 01110101 01110011 01100101 00100000 01101101 01100101 00101100 00100000")
-            print("01101000 01100101 01110010 01100101 00100111 01110011 00100000 01111001 01101111 01110101 01110010")
-            print("00100000 01101110 01101111 01110011 01100101 00101110 00100000 01001001 00100000 01100110 01101111")
-            print("01110101 01101110 01100100 00100000 01101001 01110100 00100000 01101001 01101110 00100000 01101101")
-            print("01111001 00100000 01100010 01110101 01110011 01101001 01101110 01100101 01110011 01110011 00101110")
-            print("\t\tERROR: Access to \"checkUser\" is disabled for security purposes.")
-            print("\t\t\t Nice attempt at beating the system though  ;)")
-            print("\t\t\t    Press ENTER to return to the main menu.")
-            print("01010011 01110100 01100001 01111001 00100000 01101111 01110101 01110100 00100000 01101111 01100110")
-            print("00100000 01101101 01111001 00100000 01100011 01101111 01100100 01100101 00100000 01100110 01110010")
-            print("01101111 01101101 00100000 01101110 01101111 01110111 00100000 01101111 01101110 00100000 01101101")
-            print("01101011 01100001 01111001 00100000 01110100 01101000 01100001 01101110 01101011 01110011 00100000")
-            print("00101101 01000011 01111001 01100011 01101100 01100001 01110111 01110000 01110011 00110101 00110010")
-            input()
-            return -1
 
         if(not accountLookupFailed): # skips code if account was not found
             # user found, continuing
@@ -382,7 +359,7 @@ def addUser():
     while True: # get class until valid
         clear()
         initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username)).upper()
-        classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + initialClass + "\\"))
+        classPath = Path(str(os.getcwd() + "\\classes\\" + initialClass + "\\"))
         if(classPath.is_dir()):
             # class exists
             classTeacherFlag = int(input("Will \"{0}\" be teaching \"{1}\" (1=yes, 0=no): ".format(username, initialClass)))

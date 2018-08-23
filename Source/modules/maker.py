@@ -76,8 +76,7 @@ def makeQuiz(carryID):
     i = 0
     quizFiles = []
     for classCode in includedList:
-        classPath = Path(str(os.getcwd() + "\\Source\\classes\\" + classCode + "\\quizzes\\"))
-        os.chdir("Source")
+        classPath = Path(str(os.getcwd() + "\\classes\\" + classCode + "\\quizzes\\"))
         os.chdir("classes")
         os.chdir(classCode)
         os.chdir("quizzes")
@@ -90,7 +89,6 @@ def makeQuiz(carryID):
             return
         os.chdir(quizName)
         quizFiles.append(open("{0}.quizfile".format(quizName), "w"))
-        os.chdir("../")
         os.chdir("../")
         os.chdir("../")
         os.chdir("../")

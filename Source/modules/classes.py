@@ -67,7 +67,7 @@ def classRegister(student=0, username="NULL"):
         input()
         return
 
-    classPath = Path(str(os.getcwd() + "\\Source\\\\classes\\" + toRegister + "\\"))
+    classPath = Path(str(os.getcwd() + "\\classes\\" + toRegister + "\\"))
     if(classPath.is_dir()):
         # class is valid
 
@@ -193,7 +193,7 @@ def classCreate(toCreate="NULL", username="NULL"):
         else:
             break
     
-    classPath = Path(str(os.getcwd() + "\\Source\\classes\\" + toCreate + "\\"))
+    classPath = Path(str(os.getcwd() + "\\classes\\" + toCreate + "\\"))
     if(classPath.is_dir()):
         # class is already made
         print("Class code \"{0}\" already exists. Press ENTER to continue.".format(toCreate))
@@ -202,12 +202,10 @@ def classCreate(toCreate="NULL", username="NULL"):
 
     else:
         # class does not exist, create
-        os.chdir("Source")
         os.chdir("classes")
         make_directory(toCreate)
         os.chdir(toCreate)
         make_directory("quizzes")
-        os.chdir("../")
         os.chdir("../")
         os.chdir("../")
 

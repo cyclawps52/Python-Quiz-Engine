@@ -13,7 +13,7 @@ def clear():
     if os.name == 'nt':
         mask = os.system('cls')
     else:
-        mask = os.system('cls')
+        mask = os.system('clear')
 
 def pete():
     line()

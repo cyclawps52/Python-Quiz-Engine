@@ -79,6 +79,7 @@ while True:
 		menu = {}
 		menu['LI'] = "Login"
 		menu['EP'] = "Exit Program"
+		menu['DB1'] = "Dump Database"
 
 		while True:
 			# print menu
@@ -95,6 +96,10 @@ while True:
 
 			elif(selection == 'EP'):
 				exit(0)
+
+			elif(selection == 'DB1'):
+				debugDumpDatabase()
+				break
 
 			else:
 				print('Invalid option!')
