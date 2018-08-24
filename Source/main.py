@@ -1,5 +1,5 @@
 # STANDARD IMPORTS
-#import os
+import os
 
 # CUSTOM IMPORTS
 from modules import *
@@ -95,6 +95,7 @@ while True:
 				break
 
 			elif(selection == 'EP'):
+				os.system('exit')
 				exit(0)
 
 			elif(selection == 'DB1'):
