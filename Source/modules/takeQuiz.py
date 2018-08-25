@@ -102,7 +102,7 @@ def quizMenu(carryID, carryClass):
 
         # not taken, proceed to quiz engine
         except:
-            takeQuiz(selectedQuizPath)
+            takeQuiz(selectedQuizPath, resultPath)
             return
 
 def viewer(filePath):
@@ -115,6 +115,82 @@ def viewer(filePath):
     input()
     return
 
-def takeQuiz(filePath):
-    print("TAKING THINGY")
+def takeQuiz(filePath, resultPath):
+    quizStream = open(filePath, "r")
+    resultStream = open(resultPath, "w")
+
+    # chop off beginning marker
+    buffer = quizStream.readline()
+
+    #get number of questions
+    buffer = quizStream.readline()
+    buffer = buffer.split(".")
+    buffer.pop(0)
+    numQs = int(buffer[0])
+    correctCount = 0
+
+    # loop for every question
+    for i in range(1, numQs+1):
+        clear()
+        print("Question {0} of {1}".format(i, numQs))
+        line()
+        # get question text
+        questionText = quizStream.readline()
+        print(questionText[3:])
+
+        # get possible answers
+        buffer = quizStream.readline()
+        answerNum = 1
+        while(buffer[:1] is not 'C'):
+            print("{0}: {1}".format(answerNum, buffer[3:-1]))
+            answerNum += 1
+            buffer = quizStream.readline()
+        line()
+        
+        # get selected answer
+        selectedAnswer = input("Choose an answer number: ")
+        try:
+            int(selectedAnswer)
+        except:
+            selectedAnswer = 0
+        correctAnswer = int(buffer[3:])
+
+        # write info to file
+        resultStream.write("B:\n")
+        resultStream.write("Q: {0}\n".format(i))
+        if(int(selectedAnswer) == int(correctAnswer)):
+            resultStream.write("C: 1\n")
+            correctCount += 1
+        else:
+            resultStream.write("C: 0\n")
+        resultStream.write("A: {0}\n".format(selectedAnswer))
+        resultStream.write("X: {0}\n".format(correctAnswer))
+        resultStream.write("E: \n")
+
+    # get flag information
+    while(buffer[:1] is not 'F'):
+        buffer = quizStream.readline()
+    containsFlag = int(buffer[3:])
+
+    #if flag is present
+    if(containsFlag == 1):
+        buffer = quizStream.readline()
+        threshold = int(buffer[3:])
+        if(correctCount >= threshold):
+            flagBox = quizStream.readline()
+            flagBox = flagBox[3:-1]
+    
+    # display information to user
+    clear()
+    print("Your score was: {0}/{1}".format(correctCount, numQs))
+    print("This is a {0}%".format(correctCount / numQs * 100))
+    if(containsFlag):
+        if(correctCount >= threshold):
+            line()
+            print("You scored high enough to see the flag!")
+            print("Flag: {0}".format(flagBox))
+            line()
+    
+    print("Press ENTER to return to student menu.")
+    input()
     return
