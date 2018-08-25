@@ -111,6 +111,8 @@ while True:
 	elif(permissionLevel == 0): # student permissions
 		# setup menu options
 		menu = {}
+		menu['QM'] = "Quiz Menu"
+
 		menu['CR'] = "Register for Class"
 		menu['CV'] = "View Registered Classes"
 		menu['CD'] = "Drop Class"
@@ -128,7 +130,10 @@ while True:
 			line()
 			selection = input("Selection: ").upper()
 
-			if(selection == 'CR'):
+			if(selection == 'QM'):
+				quizMenu(carryID=carryID[0], carryClass=carryClass[0])
+				break
+			elif(selection == 'CR'):
 				classRegister(student=1, username=carryID[0])
 				break
 			elif(selection == 'CV'):
