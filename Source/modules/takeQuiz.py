@@ -72,7 +72,7 @@ def quizMenu(carryID, carryClass):
                 print("Invalid selection, press ENTER to retry.")
                 input()
             if(selection == 1):
-                viewer(resultPath)
+                viewer(gradePath)
                 return
             elif(selection == 2):
                 # view dump if it exists
@@ -106,7 +106,13 @@ def quizMenu(carryID, carryClass):
             return
 
 def viewer(filePath):
-    print("VIEWING THINGY")
+    clear()
+    f = open(filePath)
+    content = f.read()
+    print(content)
+    line()
+    print("Press ENTER to continue.")
+    input()
     return
 
 def takeQuiz(filePath):
