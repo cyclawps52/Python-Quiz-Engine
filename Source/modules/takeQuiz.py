@@ -54,7 +54,7 @@ def quizMenu(carryID, carryClass):
     resultPath = Path(quizPath + "\\" + selectedQuiz + "\\results\\" + carryID + ".result")
     gradePath = Path(quizPath + "\\" + selectedQuiz + "\\grades\\" + carryID + ".grade")
     selectedQuizPath = Path(quizPath + "\\" + selectedQuiz + "\\" + selectedQuiz + ".quizfile")
-    selectedQuizDump = Path(quizPath + "\\" + selectedQuiz + "\\" + selectedQuiz + ".quizdump")
+    selectedQuizDump = Path(quizPath + "\\" + selectedQuiz + "\\" + "dump.dump")
 
     clear()
 
@@ -166,6 +166,9 @@ def takeQuiz(filePath, resultPath):
         resultStream.write("A: {0}\n".format(selectedAnswer))
         resultStream.write("X: {0}\n".format(correctAnswer))
         resultStream.write("E: \n")
+
+        # chop off end of question flag
+        buffer = quizStream.readline()
 
     # get flag information
     while(buffer[:1] is not 'F'):
