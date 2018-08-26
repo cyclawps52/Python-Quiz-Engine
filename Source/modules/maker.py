@@ -90,7 +90,7 @@ def makeQuiz(carryID):
         os.chdir(quizName)
         
         # write lock file (default locked)
-        lockPath = Path(classPath + quizName + "\\lock.lock")
+        lockPath = os.getcwd() + "\\lock.lock"
         lockFile = open(lockPath, "w")
 
         # make quiz results and grades directories

@@ -169,6 +169,7 @@ try:
 			menu['QG'] = "Quiz Grade" 
 			menu['QM'] = "Graded Quiz Menu"
 			menu['DQ'] = "Delete Quiz"
+			menu['QL'] = "Quiz Locking"
 			
 			menu['CR'] = "Register Self for Class"
 			menu['CV'] = "View Registered Classes for Self"
@@ -209,8 +210,13 @@ try:
 					break
 				elif(selection == "QM"):
 					gradedQuizMenu(carryClass=carryClass[0])
+					break
 				elif(selection == "DQ"):
 					deleteQuiz(carryClass=carryClass[0])
+					break
+				elif(selection == 'QL'):
+					lockQuiz(carryClass=carryClass[0])
+					break
 				
 				elif(selection == 'CR'):
 					classRegister(student=1, username=carryID[0])

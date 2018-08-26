@@ -376,9 +376,10 @@ def lockQuiz(carryClass):
         i = 1
         for quiz in quizFolders:
             lockPath = Path(quizPath + "\\" + quiz + "\\lock.lock")
-            if(lockPath.is_file):
+            try:
+                open(lockPath, "r")
                 print(str(i) + ": " + quiz + "| LOCKED")
-            else:
+            except:
                 print(str(i) + ": " + quiz + "| UNLOCKED")
             i += 1
 
@@ -395,18 +396,19 @@ def lockQuiz(carryClass):
             print("Invalid selection, press ENTER to retry.")
             input()
 
-    selectedQuiz = quizFolders[selection]
+    selectedQuiz = quizFolders[selection-1]
     # toggle lock state
     unlockPath = Path(quizPath + "\\" + quiz + "\\unlock.unlock")
-    if(lockPath.is_file):
+    try:
         # unlock
+        open(lockPath, "r")
         os.rename(lockPath, unlockPath)
         clear()
         print("Quiz {0} has been unlocked.".format(selectedQuiz))
         print("Press ENTER to return to teacher menu.")
         input()
         return
-    else:
+    except:
         # lock
         os.rename(unlockPath, lockPath)
         clear()
