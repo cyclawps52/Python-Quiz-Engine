@@ -299,7 +299,7 @@ def gradedQuizMenu(carryClass):
 
 def deleteQuiz(carryClass):
     clear()
-    # get all  quizes for current class
+    # get all quizes for current class
     quizPath = str(os.getcwd() + "\\classes\\" + carryClass[1:] + "\\quizzes")
     filesList = os.listdir(quizPath)
     quizFolders = []
@@ -359,3 +359,59 @@ def deleteQuiz(carryClass):
         return
     else:
         return
+
+def lockQuiz(carryClass):
+    clear()
+    # get all quizes for current class
+    quizPath = str(os.getcwd() + "\\classes\\" + carryClass[1:] + "\\quizzes")
+    filesList = os.listdir(quizPath)
+    quizFolders = []
+    for file in filesList:
+        if Path(file).is_dir:
+            quizFolders.append(file)
+
+    # print lock status for all quizes
+    while True:
+        clear()
+        i = 1
+        for quiz in quizFolders:
+            lockPath = Path(quizPath + "\\" + quiz + "\\lock.lock")
+            if(lockPath.is_file):
+                print(str(i) + ": " + quiz + "| LOCKED")
+            else:
+                print(str(i) + ": " + quiz + "| UNLOCKED")
+            i += 1
+
+        line()
+        selection = input("Selection: ")
+        try:
+            selection = int(selection)
+            if(selection >= 1 and selection <= i):
+                break
+            else:
+                print("Invalid selection, press ENTER to retry.")
+                input()
+        except:
+            print("Invalid selection, press ENTER to retry.")
+            input()
+
+    selectedQuiz = quizFolders[selection]
+    # toggle lock state
+    unlockPath = Path(quizPath + "\\" + quiz + "\\unlock.unlock")
+    if(lockPath.is_file):
+        # unlock
+        os.rename(lockPath, unlockPath)
+        clear()
+        print("Quiz {0} has been unlocked.".format(selectedQuiz))
+        print("Press ENTER to return to teacher menu.")
+        input()
+        return
+    else:
+        # lock
+        os.rename(unlockPath, lockPath)
+        clear()
+        print("Quiz {0} has been locked.".format(selectedQuiz))
+        print("Press ENTER to return to teacher menu.")
+        input()
+        return
+
