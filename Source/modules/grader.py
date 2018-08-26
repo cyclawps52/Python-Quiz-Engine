@@ -1,11 +1,13 @@
 # standard imports
 from pathlib import Path
 import os
+import shutil
 
 # custom imports
 from modules.custom import *
 from modules.auth import *
 from modules.classes import *
+from modules.takeQuiz import *
 
 def gradeMenu(carryClass):
     carryClass = carryClass[1:]
@@ -195,3 +197,165 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
     print("Finshed grading! Press ENTER to return to teacher menu.")
     input()
     return
+
+def gradedQuizMenu(carryClass):
+    clear()
+    # get all  quizes for current class
+    quizPath = str(os.getcwd() + "\\classes\\" + carryClass[1:] + "\\quizzes")
+    filesList = os.listdir(quizPath)
+    quizFolders = []
+    for file in filesList:
+        if Path(file).is_dir:
+            quizFolders.append(file)
+
+    # print only graded quizes
+    while True:
+        clear()
+        i = 1
+        for quiz in quizFolders:
+            gradePath = Path(quizPath + "\\" + quiz + "\\overall.grade")
+
+            try:
+                open(gradePath, "r")
+                print(str(i) + ": " + quiz)
+                i += 1
+            except:
+                pass
+
+        line()
+        selection = input("Selection: ")
+        try:
+            selection = int(selection)
+            if(selection >= 1 and selection <= i):
+                break
+            else:
+                print("Invalid selection, press ENTER to retry.")
+                input()
+        except:
+            print("Invalid selection, press ENTER to retry.")
+            input()
+
+    # menu for selected quiz
+    selectedQuiz = quizFolders[selection-1]
+    while True:
+        clear()
+        print("1. See overall result for {0}".format(selectedQuiz))
+        print("2. See quiz dump for {0}".format(selectedQuiz))
+        print("3. Reset quiz {0} (remove all ungraded results, all grades, and test dump".format(selectedQuiz))
+        selection = input("Selection: ")
+        try:
+            selection = int(selection)
+        except:
+            print("Invalid selection, press ENTER to retry.")
+            input()
+        if(selection == 1):
+            # view overall grade
+            viewer(gradePath)
+            return
+        elif(selection == 2):
+            # view dump
+            dumpPath = quizPath + "\\" + selectedQuiz + "\\dump.dump"
+            viewer(dumpPath)
+            return
+        elif(selection == 3):
+            # reset quiz
+            quizDir = Path(quizPath + "\\" + selectedQuiz + "\\")
+            os.chdir(quizDir)
+            os.chdir("grades")
+            fileList = [file for file in os.listdir(os.getcwd())]
+            for file in fileList:
+                os.remove(os.path.join(os.getcwd(), file))
+
+            os.chdir("../results")
+            fileList = [file for file in os.listdir(os.getcwd())]
+            for file in fileList:
+                os.remove(os.path.join(os.getcwd(), file))
+
+            os.chdir("../../../../")
+
+            dumpPath = quizPath + "\\" + selectedQuiz + "\\dump.dump"
+            try:
+                os.remove(dumpPath)
+            except:
+                pass
+
+            lockPath = quizPath + "\\" + selectedQuiz + "\\lock.lock"
+            try:
+                os.remove(lockPath)
+            except:
+                pass
+
+            overallPath = quizPath + "\\" + selectedQuiz + "\\overall.grade"
+            os.remove(overallPath)
+
+            clear()
+            print("Quiz reset successfully. Press ENTER to return to teacher menu.")
+            input()
+            return
+
+        else:
+            print("Invalid selection, press ENTER to retry.")
+            input()
+
+def deleteQuiz(carryClass):
+    clear()
+    # get all  quizes for current class
+    quizPath = str(os.getcwd() + "\\classes\\" + carryClass[1:] + "\\quizzes")
+    filesList = os.listdir(quizPath)
+    quizFolders = []
+    for file in filesList:
+        if Path(file).is_dir:
+            quizFolders.append(file)
+
+    # print only graded quizes
+    while True:
+        clear()
+        i = 1
+        for quiz in quizFolders:
+            print(str(i) + ": " + quiz)
+            i += 1
+
+        line()
+        selection = input("Selection: ")
+        try:
+            selection = int(selection)
+            if(selection >= 1 and selection <= i):
+                break
+            else:
+                print("Invalid selection, press ENTER to retry.")
+                input()
+        except:
+            print("Invalid selection, press ENTER to retry.")
+            input()
+    
+    # confirm
+    clear()
+    selectedQuiz = quizFolders[selection-1]
+    while True:
+        print("Are you sure you want to delete {0}?".format(selectedQuiz))
+        print("1. Yes")
+        print("2. No")
+        line()
+        selection = input("Selection: ")
+        try:
+            selection = int(selection)
+            if(selection == 1 or selection == 2):
+                break
+            else:
+                print("Invalid selection, press ENTER to retry.")
+                input()
+        except:
+            print("Invalid selection, press ENTER to retry.")
+            input()
+
+    if(selection == 1):
+        # delete quiz directory
+        selectedQuizPath = quizPath + "\\" + selectedQuiz
+        shutil.rmtree(selectedQuizPath)
+        clear()
+        print("Quiz {0} deleted successfully.".format(selectedQuiz))
+        print("Press ENTER to return to teacher menu.")
+        input()
+        return
+    else:
+        return

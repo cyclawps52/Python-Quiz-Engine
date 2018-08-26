@@ -63,6 +63,7 @@ def quizMenu(carryID, carryClass):
         open(gradePath, "r")
         # see result or quiz dump
         while True:
+            clear()
             print("1. See result for {0}".format(selectedQuiz))
             print("2. See quiz dump for {0}".format(selectedQuiz))
             selection = input("Selection: ")
