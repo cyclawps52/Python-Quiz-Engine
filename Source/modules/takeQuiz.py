@@ -24,6 +24,7 @@ def quizMenu(carryID, carryClass):
         for quiz in quizFolders:
             resultPath = Path(quizPath + "\\" + quiz + "\\results\\" + carryID + ".result")
             gradePath = Path(quizPath + "\\" + quiz + "\\grades\\" + carryID + ".grade")
+            lockPath = Path(quizPath + "\\" + quiz + "\\lock.lock")
         
             try:
                 open(gradePath, "r")
@@ -33,7 +34,11 @@ def quizMenu(carryID, carryClass):
                     open(resultPath, "r")
                     print(str(i) + ": " + quiz + " | NOT GRADED")
                 except:
-                    print(str(i) + ": " + quiz + " | NOT TAKEN")
+                    try:
+                        open(lockPath, "r")
+                        print(str(i) + ": " + quiz + " | LOCKED")
+                    except:
+                        print(str(i) + ": " + quiz + " | NOT TAKEN")
             i += 1
 
         line()
@@ -100,11 +105,20 @@ def quizMenu(carryID, carryClass):
             print("Press ENTER to exit quiz menu.")
             input()
             return
-
-        # not taken, proceed to quiz engine
+        
+        # locked menu
         except:
-            takeQuiz(selectedQuizPath, resultPath)
-            return
+            try:
+                open(lockPath, "r")
+                print("Your teacher has this quiz locked.")
+                print("Press ENTER to exit quiz menu.")
+                input()
+                return
+
+            # not taken, proceed to quiz engine
+            except:
+                takeQuiz(selectedQuizPath, resultPath)
+                return
 
 def viewer(filePath):
     clear()
