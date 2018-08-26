@@ -13,16 +13,6 @@ from modules.classes import *
 # global variables
 global db, dbCursor
 
-def debugDumpDatabase(): # DEBUG
-    clear() # DEBUG
-    db, dbCursor = connectToDatabase() # DEBUG
-    for user in dbCursor.execute("SELECT rowid, * FROM users"): # DEBUG
-	    print(user) # DEBUG
-    db.close() # DEBUG
-    print("\nPress ENTER to continue.") # DEBUG
-    input() # DEBUG
-    return # DEBUG
-
 def connectToDatabase():
     """
     call as 'db, dbcursor = connectToDatabase()'

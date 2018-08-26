@@ -80,7 +80,6 @@ try:
 			menu = {}
 			menu['LI'] = "Login"
 			menu['EP'] = "Exit Program"
-			menu['DB1'] = "Dump Database"
 
 			while True:
 				# print menu
@@ -98,10 +97,6 @@ try:
 				elif(selection == 'EP'):
 					os.system('exit')
 					exit(0)
-
-				elif(selection == 'DB1'):
-					debugDumpDatabase()
-					break
 
 				else:
 					print('Invalid option!')
@@ -182,8 +177,6 @@ try:
 			menu['CC'] = "Change Class"
 			menu['LO'] = "Logout"
 
-			menu['DB1'] = "DEBUG: Dump Database"
-
 			while True:
 				# print menu
 				options = menu.keys()
@@ -246,10 +239,6 @@ try:
 					carryID[0] = "NULL"
 					carryClass[0] = "NULL"
 					break
-
-				elif(selection == 'DB1'): # DEBUG
-					debugDumpDatabase() # DEBUG
-					break #DEBUG
 
 				else:
 					print('Invalid option!')
