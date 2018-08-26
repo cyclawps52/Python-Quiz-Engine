@@ -40,6 +40,8 @@ def makeQuiz(carryID):
 
         print("QQ: CONFIRM SELECTION")
         classChoice = input("Selection: ").upper()
+        if(classChoice == "!!"):
+            return
         if(classChoice == "QQ"):
             if(len(includedList) == 0):
                 print("You must assign the quiz to at least one class.")
@@ -65,6 +67,8 @@ def makeQuiz(carryID):
     while True:
         clear()
         quizName = input("Name for quiz: ")
+        if(selection == "!!"):
+            return
         if(len(quizName) == 0):
             print("Quiz name cannot be empty. Press ENTER to retry.")
             input()

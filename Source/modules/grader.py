@@ -35,6 +35,8 @@ def gradeMenu(carryClass):
 
         line()
         selection = input("Selection: ")
+        if(selection == "!!"):
+            return
         try:
             selection = int(selection)
             if(selection >= 1 and selection <= i):
@@ -224,6 +226,8 @@ def gradedQuizMenu(carryClass):
 
         line()
         selection = input("Selection: ")
+        if(selection == "!!"):
+            return
         try:
             selection = int(selection)
             if(selection >= 1 and selection <= i):
@@ -243,6 +247,8 @@ def gradedQuizMenu(carryClass):
         print("2. See quiz dump for {0}".format(selectedQuiz))
         print("3. Reset quiz {0} (remove all ungraded results, all grades, and test dump".format(selectedQuiz))
         selection = input("Selection: ")
+        if(selection == "!!"):
+            return
         try:
             selection = int(selection)
         except:
@@ -317,6 +323,8 @@ def deleteQuiz(carryClass):
 
         line()
         selection = input("Selection: ")
+        if(selection == "!!"):
+            return
         try:
             selection = int(selection)
             if(selection >= 1 and selection <= i):
@@ -337,6 +345,8 @@ def deleteQuiz(carryClass):
         print("2. No")
         line()
         selection = input("Selection: ")
+        if(selection == "!!"):
+            return
         try:
             selection = int(selection)
             if(selection == 1 or selection == 2):
@@ -385,6 +395,8 @@ def lockQuiz(carryClass):
 
         line()
         selection = input("Selection: ")
+        if(selection == "!!"):
+            return
         try:
             selection = int(selection)
             if(selection >= 1 and selection <= i):

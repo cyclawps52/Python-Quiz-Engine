@@ -43,6 +43,8 @@ def quizMenu(carryID, carryClass):
 
         line()
         selection = input("Selection: ")
+        if(selection == "!!"):
+            return
         try:
             selection = int(selection)
             if(selection >=1 and selection <=i):
@@ -72,6 +74,8 @@ def quizMenu(carryID, carryClass):
             print("1. See result for {0}".format(selectedQuiz))
             print("2. See quiz dump for {0}".format(selectedQuiz))
             selection = input("Selection: ")
+            if(selection == "!!"):
+                return
             try:
                 selection = int(selection)
             except:

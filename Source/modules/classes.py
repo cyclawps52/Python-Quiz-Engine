@@ -18,6 +18,8 @@ def classCheck(silent=0, username="NULL"):
 
     if(username=="NULL"):
         username = input("Username to check: ").upper()
+        if(username == "!!"):
+            return
     
     dbAccount = dbCursor.execute("SELECT * FROM users WHERE username=?", [(username)])
     dbAccount = dbCursor.fetchall()
@@ -53,6 +55,8 @@ def classRegister(student=0, username="NULL"):
     clear()
     if(username=="NULL"):
         username = input("Username to enroll: ").upper()
+        if(username == "!!"):
+            return
     else:
         username = username.upper()
     classList = classCheck(silent=1, username=username)
@@ -60,6 +64,8 @@ def classRegister(student=0, username="NULL"):
         return
     
     toRegister = input("Class code to add: ").upper()
+    if(toRegister == "!!"):
+        return
 
     # check if user is in class
     if str("," + toRegister + "!") in classList or str(",$" + toRegister + "!") in classList:
@@ -107,6 +113,8 @@ def classDrop(username="NULL", carryClass="NULL"):
     clear()
     if(username == "NULL"):
         username = input("Username to drop: ").upper()
+        if(username == "!!"):
+            return
     else:
         username = username.upper()
     classList = classCheck(silent=1, username=username)
@@ -182,6 +190,8 @@ def classCreate(toCreate="NULL", username="NULL"):
         clear()
         if(toCreate == "NULL"):
             toCreate = input("Class code to create: ").upper()
+            if(toCreate == "!!"):
+                return
         else:
             toCreate = toCreate.upper()
         if(len(toCreate) == 0):

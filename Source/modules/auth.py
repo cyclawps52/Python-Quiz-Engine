@@ -327,6 +327,8 @@ def addUser():
     while True:  # get username until not blank and not in database
             clear()
             username = input("Enter a username for the new account: ").upper()
+            if(username == "!!"):
+                return
             if(len(username) == 0):
                 print("Username cannot be empty. Press ENTER to try again.")
                 input()
