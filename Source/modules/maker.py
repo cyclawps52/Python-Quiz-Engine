@@ -67,7 +67,7 @@ def makeQuiz(carryID):
     while True:
         clear()
         quizName = input("Name for quiz: ")
-        if(selection == "!!"):
+        if(quizName == "!!"):
             return
         if(len(quizName) == 0):
             print("Quiz name cannot be empty. Press ENTER to retry.")
