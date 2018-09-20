@@ -32,9 +32,9 @@ def checkIfFirstRun():
     # carry through global variables
     global db, dbCursor
 
-    pathToDatabase = Path(os.path.join(os.getcwd(), "database", "auth.db"))
+    pathToDatabase = os.path.join(os.getcwd(), "database", "auth.db")
     # check if database needs to be created
-    my_file = pathToDatabase
+    my_file = Path(pathToDatabase)
     if my_file.is_file():
         # file exists
         db = sqlite3.connect(pathToDatabase)

@@ -22,7 +22,7 @@ def quizMenu(carryID, carryClass):
         clear()
         i = 1
         for quiz in quizFolders:
-            resultsPath = Path(os.path.join(quizPath, quiz, "results", str(carryID + ".result")))
+            resultPath = Path(os.path.join(quizPath, quiz, "results", str(carryID + ".result")))
             gradePath = Path(os.path.join(quizPath, quiz, "grades", str(carryID + ".grade")))
             lockPath = Path(os.path.join(quizPath, quiz, "lock.lock"))
         
@@ -58,7 +58,7 @@ def quizMenu(carryID, carryClass):
 
     # get next function call from selection
     selectedQuiz = quizFolders[selection-1]
-    resultsPath = Path(os.path.join(quizPath, selectedQuiz, "results", str(carryID + ".result")))
+    resultPath = Path(os.path.join(quizPath, selectedQuiz, "results", str(carryID + ".result")))
     gradePath = Path(os.path.join(quizPath, selectedQuiz, "grades", str(carryID + ".grade")))
     selectedQuizPath = Path(os.path.join(quizPath, selectedQuiz, str(selectedQuiz + ".quizfile")))
     selectedQuizDump = Path(os.path.join(quizPath, selectedQuiz, "dump.dump"))

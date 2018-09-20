@@ -50,7 +50,7 @@ def gradeMenu(carryClass):
 
     # get next function call from selection
     selectedQuiz = quizFolders[selection-1]
-    gradedPath = Path(os.path.join(quizpath, selectedQuiz, "overall.grade"))
+    gradedPath = Path(os.path.join(quizPath, selectedQuiz, "overall.grade"))
     selectedQuizPath = os.path.join(quizPath, selectedQuiz, str(selectedQuiz + ".quizfile"))
     selectedQuizFolder = os.path.join(quizPath, selectedQuiz)
     try:
@@ -64,6 +64,7 @@ def gradeMenu(carryClass):
         return
 
 def gradeQuiz(selectedQuizPath, selectedQuizFolder):
+    clear()
     # get generic file streams opened
     quizStream = open(selectedQuizPath, "r")
     overallStreamPath = os.path.join(selectedQuizFolder, "overall.grade")
@@ -98,11 +99,11 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
             studentName = studentName[:-7]
 
             # open student grade filestream
-            studentStreampath = os.path.join(selectedQuizFolder, "grades", str(studentName + ".grade"))
+            studentStreamPath = os.path.join(selectedQuizFolder, "grades", str(studentName + ".grade"))
             studentStream = open(studentStreamPath, "w")
 
             # open student results filestream
-            studentsResultsStreamPath = os.path.join(selectedQuizFolder, "results", str(studentName + ".result"))
+            studentResultStreamPath = os.path.join(selectedQuizFolder, "results", str(studentName + ".result"))
             studentResultStream = open(studentResultStreamPath, "r")
 
             # trim B: line off results
@@ -160,20 +161,20 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
 
     #calculate question averages
     for i in range(1, numQs+1):
-        questionStats[3][i] = round(questionStats[1][i] / numStudents * 100, 2)
+        questionStats[i][3] = round(questionStats[i][1] / numStudents * 100, 2)
 
     #print questionStats to overall.grade in list format
     overallStream.write("--------------------\n")
     for i in range(1, numQs+1):
-        overallStream.write("Question: {0}\n".format(questionStats[0][i]))
-        overallStream.write("\tCorrect: {0}\n".format(questionStats[1][i]))
-        overallStream.write("\tWrong: {0}\n".format(questionStats[2][i]))
-        overallStream.write("\tPercent: {0}\n\n".format(questionStats[3][i]))
+        overallStream.write("Question: {0}\n".format(questionStats[i][0]))
+        overallStream.write("\tCorrect: {0}\n".format(questionStats[i][1]))
+        overallStream.write("\tWrong: {0}\n".format(questionStats[i][2]))
+        overallStream.write("\tPercent: {0}\n\n".format(questionStats[i][3]))
 
     #get total average
     classAverage = 0
     for i in range (1, numQs+1):
-        classAverage += questionStats[3][i]
+        classAverage += questionStats[i][3]
     classAverage /= numQs
     classAverage = round(classAverage, 2)
     from modules.custom import line
