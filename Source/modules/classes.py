@@ -73,7 +73,7 @@ def classRegister(student=0, username="NULL"):
         input()
         return
 
-    classPath = Path(str(os.getcwd() + "\\classes\\" + toRegister + "\\"))
+    classPath = Path(os.path.join(os.getcwd(), "classes", toRegister))
     if(classPath.is_dir()):
         # class is valid
 
@@ -203,7 +203,7 @@ def classCreate(toCreate="NULL", username="NULL"):
         else:
             break
     
-    classPath = Path(str(os.getcwd() + "\\classes\\" + toCreate + "\\"))
+    classPath = Path(os.path.join(os.getcwd(), "classes", toCreate))
     if(classPath.is_dir()):
         # class is already made
         print("Class code \"{0}\" already exists. Press ENTER to continue.".format(toCreate))

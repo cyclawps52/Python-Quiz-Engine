@@ -189,7 +189,7 @@ try:
 				selection = input("Selection: ").upper()
 			
 				if(selection == 'NU'):
-					addUser()
+					addUser(adminUsername=carryID[0])
 					break
 				elif(selection == 'NC'):
 					classCreate(username=carryID[0])

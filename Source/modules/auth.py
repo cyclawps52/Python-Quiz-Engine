@@ -20,7 +20,7 @@ def connectToDatabase():
     # carry through global variables
     global db, dbCursor
 
-    pathToDatabase = str(os.getcwd() + "\\Source\\database\\auth.db")
+    pathToDatabase = Path(os.path.join(os.getcwd(), "database", "auth.db"))
     try:
         db = sqlite3.connect(pathToDatabase)
     except:
@@ -32,9 +32,9 @@ def checkIfFirstRun():
     # carry through global variables
     global db, dbCursor
 
-    pathToDatabase = str(os.getcwd() + "\\database\\auth.db")
+    pathToDatabase = Path(os.path.join(os.getcwd(), "database", "auth.db"))
     # check if database needs to be created
-    my_file = Path(pathToDatabase)
+    my_file = pathToDatabase
     if my_file.is_file():
         # file exists
         db = sqlite3.connect(pathToDatabase)
@@ -57,6 +57,7 @@ def checkIfFirstRun():
     else:
         # file does not exist, entering setup
         make_directory("database")
+        print(pathToDatabase)
 
         db = sqlite3.connect(pathToDatabase) # creates database file
         dbCursor = db.cursor() # creates database connection
@@ -312,7 +313,7 @@ def changeClass(carryID, carryClass):
         return 1, carryClass # logged in, activate teacher mode
     return 0, carryClass # logged in, activate student mode
 
-def addUser():
+def addUser(adminUsername="NULL"):
     db, dbCursor = connectToDatabase()
     while True:  # get username until not blank and not in database
             clear()
@@ -351,7 +352,7 @@ def addUser():
     while True: # get class until valid
         clear()
         initialClass = input("Enter a class to add new user \"{0}\" to: ".format(username)).upper()
-        classPath = Path(str(os.getcwd() + "\\classes\\" + initialClass + "\\"))
+        classPath = Path(os.path.join(os.getcwd(), "classes", initialClass))
         if(classPath.is_dir()):
             # class exists
             classTeacherFlag = int(input("Will \"{0}\" be teaching \"{1}\" (1=yes, 0=no): ".format(username, initialClass)))
@@ -377,7 +378,7 @@ def addUser():
                 else:
                     from modules.classes import classCreate
                     clear()
-                    classCreate(toCreate=initialClass)
+                    classCreate(toCreate=initialClass, username=adminUsername)
                     break
 
     # hash password to store in database

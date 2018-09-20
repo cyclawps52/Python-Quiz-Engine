@@ -10,7 +10,7 @@ from modules.classes import *
 def quizMenu(carryID, carryClass):
     clear()
     # get all quizes for current user in current class
-    quizPath = str(os.getcwd() + "\\classes\\" + carryClass + "\\quizzes")
+    quizPath = os.path.join(os.getcwd(), "classes", carryClass, "quizzes")
     filesList = os.listdir(quizPath)
     quizFolders = []
     for file in filesList:
@@ -22,9 +22,9 @@ def quizMenu(carryID, carryClass):
         clear()
         i = 1
         for quiz in quizFolders:
-            resultPath = Path(quizPath + "\\" + quiz + "\\results\\" + carryID + ".result")
-            gradePath = Path(quizPath + "\\" + quiz + "\\grades\\" + carryID + ".grade")
-            lockPath = Path(quizPath + "\\" + quiz + "\\lock.lock")
+            resultsPath = Path(os.path.join(quizPath, quiz, "results", str(carryID + ".result")))
+            gradePath = Path(os.path.join(quizPath, quiz, "grades", str(carryID + ".grade")))
+            lockPath = Path(os.path.join(quizPath, quiz, "lock.lock"))
         
             try:
                 open(gradePath, "r")
@@ -58,10 +58,10 @@ def quizMenu(carryID, carryClass):
 
     # get next function call from selection
     selectedQuiz = quizFolders[selection-1]
-    resultPath = Path(quizPath + "\\" + selectedQuiz + "\\results\\" + carryID + ".result")
-    gradePath = Path(quizPath + "\\" + selectedQuiz + "\\grades\\" + carryID + ".grade")
-    selectedQuizPath = Path(quizPath + "\\" + selectedQuiz + "\\" + selectedQuiz + ".quizfile")
-    selectedQuizDump = Path(quizPath + "\\" + selectedQuiz + "\\" + "dump.dump")
+    resultsPath = Path(os.path.join(quizPath, selectedQuiz, "results", str(carryID + ".result")))
+    gradePath = Path(os.path.join(quizPath, selectedQuiz, "grades", str(carryID + ".grade")))
+    selectedQuizPath = Path(os.path.join(quizPath, selectedQuiz, str(selectedQuiz + ".quizfile")))
+    selectedQuizDump = Path(os.path.join(quizPath, selectedQuiz, "dump.dump"))
 
     clear()
 

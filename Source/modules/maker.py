@@ -80,7 +80,7 @@ def makeQuiz(carryID):
     i = 0
     quizFiles = []
     for classCode in includedList:
-        classPath = Path(str(os.getcwd() + "\\classes\\" + classCode + "\\quizzes\\"))
+        classPath = Path(os.path.join(os.getcwd(), "classes", classCode, "quizzes"))
         os.chdir("classes")
         os.chdir(classCode)
         os.chdir("quizzes")
@@ -94,7 +94,7 @@ def makeQuiz(carryID):
         os.chdir(quizName)
         
         # write lock file (default locked)
-        lockPath = os.getcwd() + "\\lock.lock"
+        lockPath = os.path.join(os.getcwd(), "lock.lock")
         lockFile = open(lockPath, "w")
 
         # make quiz results and grades directories

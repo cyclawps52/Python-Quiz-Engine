@@ -13,7 +13,7 @@ def gradeMenu(carryClass):
     carryClass = carryClass[1:]
     clear()
     # get all quizes for current class
-    quizPath = str(os.getcwd() + "\\classes\\" + carryClass + "\\quizzes")
+    quizPath = os.path.join(os.getcwd(), "classes", carryClass, "quizzes")
     filesList = os.listdir(quizPath)
     quizFolders = []
     for file in filesList:
@@ -25,7 +25,7 @@ def gradeMenu(carryClass):
         clear()
         i = 1
         for quiz in quizFolders:
-            gradedPath = Path(quizPath + "\\" + quiz +"\\overall.grade")
+            gradedPath = Path(os.path.join(os.getcwd(), "quiz", "overall.grade"))
             try:
                 open(gradedPath, "r")
                 print(str(i) + ": " + quiz + " | GRADED")
@@ -50,9 +50,9 @@ def gradeMenu(carryClass):
 
     # get next function call from selection
     selectedQuiz = quizFolders[selection-1]
-    gradedPath = Path(quizPath + "\\" + selectedQuiz + "\\overall.grade")
-    selectedQuizPath = quizPath + "\\" + selectedQuiz + "\\" + selectedQuiz + ".quizfile"
-    selectedQuizFolder = quizPath + "\\" + selectedQuiz + "\\"
+    gradedPath = Path(os.path.join(quizpath, selectedQuiz, "overall.grade"))
+    selectedQuizPath = os.path.join(quizPath, selectedQuiz, str(selectedQuiz + ".quizfile"))
+    selectedQuizFolder = os.path.join(quizPath, selectedQuiz)
     try:
         open(gradedPath, "r")
         print("{0} is already graded for this class.".format(selectedQuiz))
@@ -66,9 +66,9 @@ def gradeMenu(carryClass):
 def gradeQuiz(selectedQuizPath, selectedQuizFolder):
     # get generic file streams opened
     quizStream = open(selectedQuizPath, "r")
-    overallStreamPath = selectedQuizFolder + "overall.grade"
+    overallStreamPath = os.path.join(selectedQuizFolder, "overall.grade")
     overallStream = open(overallStreamPath, "w")
-    dumpStreamPath = selectedQuizFolder + "dump.dump"
+    dumpStreamPath = os.path.join(selectedQuizFolder, "dump.dump")
     dumpStream = open(dumpStreamPath, "w")
 
     # get number of questions in quiz
@@ -85,7 +85,7 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
     questionStats = [[0 for x in range(w)] for y in range(h)] 
 
     # get results directory
-    resultsPath = Path(selectedQuizFolder + "\\results\\")
+    resultsPath = Path(os.path.join(selectedQuizFolder, "results"))
     numStudents = 0
     for file in os.listdir(resultsPath):
         filename = os.fsdecode(file)
@@ -98,11 +98,11 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
             studentName = studentName[:-7]
 
             # open student grade filestream
-            studentStreamPath = selectedQuizFolder + "\\grades\\" + studentName + ".grade"
+            studentStreampath = os.path.join(selectedQuizFolder, "grades", str(studentName + ".grade"))
             studentStream = open(studentStreamPath, "w")
 
             # open student results filestream
-            studentResultStreamPath = selectedQuizFolder + "\\results\\" + studentName + ".result"
+            studentsResultsStreamPath = os.path.join(selectedQuizFolder, "results", str(studentName + ".result"))
             studentResultStream = open(studentResultStreamPath, "r")
 
             # trim B: line off results
@@ -203,7 +203,7 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
 def gradedQuizMenu(carryClass):
     clear()
     # get all  quizes for current class
-    quizPath = str(os.getcwd() + "\\classes\\" + carryClass[1:] + "\\quizzes")
+    quizPath = os.path.join(os.getcwd(), "classes", carryClass[1:], "quizzes")
     filesList = os.listdir(quizPath)
     quizFolders = []
     for file in filesList:
@@ -215,7 +215,7 @@ def gradedQuizMenu(carryClass):
         clear()
         i = 1
         for quiz in quizFolders:
-            gradePath = Path(quizPath + "\\" + quiz + "\\overall.grade")
+            gradePath = Path(os.path.join(quizPath, "quizzes", "overall.grade"))
 
             try:
                 open(gradePath, "r")
@@ -260,12 +260,12 @@ def gradedQuizMenu(carryClass):
             return
         elif(selection == 2):
             # view dump
-            dumpPath = quizPath + "\\" + selectedQuiz + "\\dump.dump"
+            dumpPath = os.path.join(quizPath, selectedQuiz, "dump.dump")
             viewer(dumpPath)
             return
         elif(selection == 3):
             # reset quiz
-            quizDir = Path(quizPath + "\\" + selectedQuiz + "\\")
+            quizDir = Path(os.path.join(quizPath, selectedQuiz))
             os.chdir(quizDir)
             os.chdir("grades")
             fileList = [file for file in os.listdir(os.getcwd())]
@@ -279,19 +279,19 @@ def gradedQuizMenu(carryClass):
 
             os.chdir("../../../../")
 
-            dumpPath = quizPath + "\\" + selectedQuiz + "\\dump.dump"
+            dumpPath = os.path.join(quizPath, selectedQuiz, "dump.dump")
             try:
                 os.remove(dumpPath)
             except:
                 pass
 
-            lockPath = quizPath + "\\" + selectedQuiz + "\\lock.lock"
+            lockPath = os.path.join(quizPath, selectedQuiz, "lock.lock")
             try:
                 os.remove(lockPath)
             except:
                 pass
 
-            overallPath = quizPath + "\\" + selectedQuiz + "\\overall.grade"
+            overallpath = os.path.join(quizPath, selectedQuiz, "overall.grade")
             os.remove(overallPath)
 
             clear()
@@ -306,7 +306,7 @@ def gradedQuizMenu(carryClass):
 def deleteQuiz(carryClass):
     clear()
     # get all quizes for current class
-    quizPath = str(os.getcwd() + "\\classes\\" + carryClass[1:] + "\\quizzes")
+    quizPath = os.path.join(os.getcwd(), "classes", carryClass[1:], "quizzes")
     filesList = os.listdir(quizPath)
     quizFolders = []
     for file in filesList:
@@ -360,7 +360,7 @@ def deleteQuiz(carryClass):
 
     if(selection == 1):
         # delete quiz directory
-        selectedQuizPath = quizPath + "\\" + selectedQuiz
+        selectedQuizPath = os.path.join(quizPath, selectedQuiz)
         shutil.rmtree(selectedQuizPath)
         clear()
         print("Quiz {0} deleted successfully.".format(selectedQuiz))
@@ -373,7 +373,7 @@ def deleteQuiz(carryClass):
 def lockQuiz(carryClass):
     clear()
     # get all quizes for current class
-    quizPath = str(os.getcwd() + "\\classes\\" + carryClass[1:] + "\\quizzes")
+    quizPath = os.path.join(os.getcwd(), "classes", carryClass[1:], "quizzes")
     filesList = os.listdir(quizPath)
     quizFolders = []
     for file in filesList:
@@ -385,7 +385,7 @@ def lockQuiz(carryClass):
         clear()
         i = 1
         for quiz in quizFolders:
-            lockPath = Path(quizPath + "\\" + quiz + "\\lock.lock")
+            lockPath = Path(os.path.join(quizPath, quiz, "lock.lock"))
             try:
                 open(lockPath, "r")
                 print(str(i) + ": " + quiz + "| LOCKED")
@@ -410,7 +410,7 @@ def lockQuiz(carryClass):
 
     selectedQuiz = quizFolders[selection-1]
     # toggle lock state
-    unlockPath = Path(quizPath + "\\" + quiz + "\\unlock.unlock")
+    unlockPath = Path(os.path.join(quizPath, quiz, "unlock.unlock"))
     try:
         # unlock
         open(lockPath, "r")
