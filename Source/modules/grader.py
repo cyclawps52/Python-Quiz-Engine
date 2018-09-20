@@ -166,7 +166,7 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
     #print questionStats to overall.grade in list format
     overallStream.write("--------------------\n")
     for i in range(1, numQs+1):
-        overallStream.write("Question: {0}\n".format(questionStats[i][0]))
+        overallStream.write("Question: {0}\n".format(i))
         overallStream.write("\tCorrect: {0}\n".format(questionStats[i][1]))
         overallStream.write("\tWrong: {0}\n".format(questionStats[i][2]))
         overallStream.write("\tPercent: {0}\n\n".format(questionStats[i][3]))
@@ -216,8 +216,7 @@ def gradedQuizMenu(carryClass):
         clear()
         i = 1
         for quiz in quizFolders:
-            gradePath = Path(os.path.join(quizPath, "quizzes", "overall.grade"))
-
+            gradePath = Path(os.path.join(quizPath, quiz, "overall.grade"))
             try:
                 open(gradePath, "r")
                 print(str(i) + ": " + quiz)
