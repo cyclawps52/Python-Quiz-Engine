@@ -1,6 +1,6 @@
 # Python Quiz Engine
 
-This project consists of five modules: 
+This project was a rewrite of [one of my previous projects, the Flag Quiz Engine](https://github.com/cyclawps52/Flag-Quiz-Engine). The previous version, written in C, was very insecure and did not have a lot of fancy features. This rewrite is written in Python (hence the name) consists of five modules:
 
  1. Authentication
  2. Classes
