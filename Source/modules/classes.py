@@ -24,7 +24,8 @@ def classCheck(silent=0, username="NULL"):
     dbAccount = dbCursor.execute("SELECT * FROM users WHERE username=?", [(username)])
     dbAccount = dbCursor.fetchall()
 
-    try: # see if account exists
+     # see if account exists
+    try:  
         account = dbAccount[0]
     except:
         print("User \"{0}\" not found. Press ENTER to return to main menu.".format(username))
@@ -33,6 +34,8 @@ def classCheck(silent=0, username="NULL"):
     
     #get classes and split string
     classList = account[2]
+
+    # check if function was called silently
     if(not bool(silent)):
         i = 0
         menu = {}
@@ -76,8 +79,7 @@ def classRegister(student=0, username="NULL"):
     classPath = Path(os.path.join(os.getcwd(), "classes", toRegister))
     if(classPath.is_dir()):
         # class is valid
-
-        #check if user will be teaching the class
+        # now, check if user will be teaching the class
         if(student == 0):
             classTeacherFlag = int(input("Will \"{0}\" be teaching \"{1}\" (1=yes, 0=no): ".format(username, toRegister)))
         else:
@@ -121,7 +123,8 @@ def classDrop(username="NULL", carryClass="NULL"):
     if(classList == 1):
         return
 
-    while True: # Remain in drop mode until exit is selected
+    while True: 
+        # Remain in drop mode until exit is selected
         goToDrop = False
         invalidSelection = False
 
@@ -152,7 +155,8 @@ def classDrop(username="NULL", carryClass="NULL"):
             invalidSelection = True
 
         if(invalidSelection == False):
-            if(selection == 0): # exits if chosen
+            if(selection == 0):
+                # exit selected
                 return
 
             # selection validation
@@ -164,8 +168,8 @@ def classDrop(username="NULL", carryClass="NULL"):
                 input()
                 invalidSelection = True
 
-            if(goToDrop): # if the selection was valid
-                # drop the class
+            if(goToDrop): 
+                # if the selection was valid, drop the class
                 db, dbCursor = connectToDatabase()
                 
                 toDrop = "," + toDrop + "!"
@@ -186,7 +190,8 @@ def classDrop(username="NULL", carryClass="NULL"):
 def classCreate(toCreate="NULL", username="NULL"):
     clear()
     
-    while True:  # get class name until not blank, no commas, and no exclamation points
+    while True:  
+        # get class name until not blank, no commas, and no exclamation points
         clear()
         if(toCreate == "NULL"):
             toCreate = input("Class code to create: ").upper()

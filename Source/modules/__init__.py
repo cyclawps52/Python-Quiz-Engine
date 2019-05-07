@@ -3,12 +3,12 @@ __all__ = []
 import pkgutil
 import inspect
 
-for loader, name, is_pkg in pkgutil.walk_packages(__path__):
-    module = loader.find_module(name).load_module(name)
+for moduleLoader, moduleName, isModule in pkgutil.walk_packages(__path__):
+    module = moduleLoader.find_module(moduleName).load_module(moduleName)
 
-    for name, value in inspect.getmembers(module):
-        if name.startswith('__'):
+    for moduleName, value in inspect.getmembers(module):
+        if moduleName.startswith('__'):
             continue
 
-        globals()[name] = value
-        __all__.append(name)
+        globals()[moduleName] = value
+        __all__.append(moduleName)

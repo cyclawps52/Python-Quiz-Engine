@@ -20,8 +20,8 @@ def gradeMenu(carryClass):
         if Path(file).is_dir:
             quizFolders.append(file)
 
-    # list status of all quizes
     while True:
+        # list status of all quizes
         clear()
         i = 1
         for quiz in quizFolders:
@@ -34,7 +34,7 @@ def gradeMenu(carryClass):
             i += 1
 
         line()
-        selection = input("Selection: ")
+        selection = input("Selection (!! to go back): ")
         if(selection == "!!"):
             return
         try:
@@ -82,7 +82,7 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
     numQs = int(quizStreamBuffer[0])
 
     # create array to store results while grading
-    w, h = 4, numQs+1;
+    w, h = 4, numQs+1
     questionStats = [[0 for x in range(w)] for y in range(h)] 
 
     # get results directory
@@ -117,20 +117,21 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
             # loop until EOF
             while True:
                 buffer = studentResultStream.readline()
-                if not buffer: # if nothing read
+                if not buffer: 
+                    # if nothing was read
                     break
 
                 if(buffer[0] == "Q"):
                     # get question number
                     questionNum = int(buffer[3:])
                     # write to table
-                    questionStats[0][questionNum] = questionNum
+                    questionStats[questionNum][0] = questionNum
 
                 elif(buffer[0] == "C"):
                     # get answer status
                     questionStatus = int(buffer[3:])
                     if(questionStatus == 1):
-                        questionStats[1][questionNum] += 1
+                        questionStats[questionNum][1] += 1
                         studentStream.write("Question {0}: Correct!\n".format(questionNum))
                         # chop off expected and actual answer lines
                         buffer = studentResultStream.readline()
@@ -142,7 +143,7 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
                         studentAns = int(buffer[3:])
                         buffer = studentResultStream.readline()
                         expectedAns = int(buffer[3:])
-                        questionStats[2][questionNum] += 1
+                        questionStats[questionNum][2] += 1
                         studentStream.write("Question {0}: Wrong! Expected {1} but got {2}.\n".format(questionNum, expectedAns, studentAns))  
                     studentStream.write("--------------------------------\n")
                 
@@ -196,14 +197,13 @@ def gradeQuiz(selectedQuizPath, selectedQuizFolder):
             dumpStream.write("\t{0}: {1}".format(answerCount, line[3:]))
             answerCount += 1
 
-
     print("Finshed grading! Press ENTER to return to teacher menu.")
     input()
     return
 
 def gradedQuizMenu(carryClass):
     clear()
-    # get all  quizes for current class
+    # get all quizes for current class
     quizPath = os.path.join(os.getcwd(), "classes", carryClass[1:], "quizzes")
     filesList = os.listdir(quizPath)
     quizFolders = []
@@ -211,8 +211,8 @@ def gradedQuizMenu(carryClass):
         if Path(file).is_dir:
             quizFolders.append(file)
 
-    # print only graded quizes
     while True:
+        # print only graded quizes
         clear()
         i = 1
         for quiz in quizFolders:
@@ -225,7 +225,7 @@ def gradedQuizMenu(carryClass):
                 pass
 
         line()
-        selection = input("Selection: ")
+        selection = input("Selection (!! to go back): ")
         if(selection == "!!"):
             return
         try:
@@ -246,7 +246,7 @@ def gradedQuizMenu(carryClass):
         print("1. See overall result for {0}".format(selectedQuiz))
         print("2. See quiz dump for {0}".format(selectedQuiz))
         print("3. Reset quiz {0} (remove all ungraded results, all grades, and test dump".format(selectedQuiz))
-        selection = input("Selection: ")
+        selection = input("Selection (!! to go back): ")
         if(selection == "!!"):
             return
         try:
@@ -277,7 +277,7 @@ def gradedQuizMenu(carryClass):
             for file in fileList:
                 os.remove(os.path.join(os.getcwd(), file))
 
-            os.chdir("../../../../")
+            os.chdir("../../../../../")
 
             dumpPath = os.path.join(quizPath, selectedQuiz, "dump.dump")
             try:
@@ -291,7 +291,7 @@ def gradedQuizMenu(carryClass):
             except:
                 pass
 
-            overallpath = os.path.join(quizPath, selectedQuiz, "overall.grade")
+            overallPath = os.path.join(quizPath, selectedQuiz, "overall.grade")
             os.remove(overallPath)
 
             clear()
@@ -313,8 +313,8 @@ def deleteQuiz(carryClass):
         if Path(file).is_dir:
             quizFolders.append(file)
 
-    # print only graded quizes
     while True:
+        # print only graded quizes
         clear()
         i = 1
         for quiz in quizFolders:
@@ -322,7 +322,7 @@ def deleteQuiz(carryClass):
             i += 1
 
         line()
-        selection = input("Selection: ")
+        selection = input("Selection (!! to go back): ")
         if(selection == "!!"):
             return
         try:
@@ -344,7 +344,7 @@ def deleteQuiz(carryClass):
         print("1. Yes")
         print("2. No")
         line()
-        selection = input("Selection: ")
+        selection = input("Selection (!! to go back): ")
         if(selection == "!!"):
             return
         try:
@@ -380,8 +380,8 @@ def lockQuiz(carryClass):
         if Path(file).is_dir:
             quizFolders.append(file)
 
-    # print lock status for all quizes
     while True:
+        # print lock status for all quizes
         clear()
         i = 1
         for quiz in quizFolders:
@@ -394,7 +394,7 @@ def lockQuiz(carryClass):
             i += 1
 
         line()
-        selection = input("Selection: ")
+        selection = input("Selection (!! to go back): ")
         if(selection == "!!"):
             return
         try:

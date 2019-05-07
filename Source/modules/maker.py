@@ -39,7 +39,7 @@ def makeQuiz(carryID):
         line()
 
         print("QQ: CONFIRM SELECTION")
-        classChoice = input("Selection: ").upper()
+        classChoice = input("Selection (!! to go back): ").upper()
         if(classChoice == "!!"):
             return
         if(classChoice == "QQ"):
@@ -63,8 +63,8 @@ def makeQuiz(carryID):
             print("Invalid selection, press ENTER to try again.")
             input()
 
-    # get quiz name
     while True:
+        # get quiz name
         clear()
         quizName = input("Name for quiz: ")
         if(quizName == "!!"):
@@ -112,7 +112,8 @@ def makeQuiz(carryID):
         file.write("B: \n")
 
     # Number of questions
-    while True: # get num Qs until valid
+    while True: 
+        # get num Qs until valid
         clear()
         numQs = input("How many questions (max 99): ")
         try:
@@ -139,7 +140,8 @@ def makeQuiz(carryID):
             file.write("Q. {0}\n".format(question))
     
         # get number of answers
-        while True: # get num As until valid
+        while True: 
+            # get num As until valid
             clear()
             numAs = input("How many answers (max 99): ")
             try:
@@ -172,7 +174,8 @@ def makeQuiz(carryID):
     clear()
     print("Would you like to have a flag displayed if the score is over a certain amount?")
     flagChoice = input("1==yes, 0==no: ")
-    if(flagChoice == "1"): # write flag
+    if(flagChoice == "1"): 
+        # write flag
         for file in quizFiles:
             file.write("F: 1\n")
         line()
@@ -194,7 +197,8 @@ def makeQuiz(carryID):
         flagBox = input("What is the flag: ")
         for file in quizFiles:
             file.write("T: {0}\n".format(flagBox))
-    elif(flagChoice == "0"): # no flag
+    elif(flagChoice == "0"): 
+        # no flag
         for file in quizFiles:
             file.write("F: 0\n")
     else:

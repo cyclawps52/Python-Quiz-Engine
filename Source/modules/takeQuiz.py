@@ -17,8 +17,8 @@ def quizMenu(carryID, carryClass):
         if Path(file).is_dir:
             quizFolders.append(file)
 
-    # list status of all quizes
     while True:
+        # list status of all quizes
         clear()
         i = 1
         for quiz in quizFolders:
@@ -28,21 +28,33 @@ def quizMenu(carryID, carryClass):
         
             try:
                 open(gradePath, "r")
-                print(str(i) + ": " + quiz + " | GRADED")
+                # quiz is graded, check if locked
+                try:
+                    open(lockPath, "r")
+                    print(str(i) + ": " + quiz + " | GRADED (LOCKED)")
+                except:
+                    # graded but not locked
+                    print(str(i) + ": " + quiz + " | GRADED")
             except:
                 try:
                     open(resultPath, "r")
-                    print(str(i) + ": " + quiz + " | NOT GRADED")
+                    # quiz has been taken, check if locked
+                    try:
+                        open(lockPath, "r")
+                        print(str(i) + ": " + quiz + " | NOT GRADED (LOCKED)")
+                    except:
+                        # quiz has been taken but not locked
+                        print(str(i) + ": " + quiz + " | NOT GRADED")
                 except:
                     try:
                         open(lockPath, "r")
-                        print(str(i) + ": " + quiz + " | LOCKED")
+                        print(str(i) + ": " + quiz + " | NOT TAKEN (LOCKED)")
                     except:
                         print(str(i) + ": " + quiz + " | NOT TAKEN")
             i += 1
 
         line()
-        selection = input("Selection: ")
+        selection = input("Selection (!! to go back): ")
         if(selection == "!!"):
             return
         try:
@@ -73,7 +85,7 @@ def quizMenu(carryID, carryClass):
             clear()
             print("1. See result for {0}".format(selectedQuiz))
             print("2. See quiz dump for {0}".format(selectedQuiz))
-            selection = input("Selection: ")
+            selection = input("Selection (!! to go back): ")
             if(selection == "!!"):
                 return
             try:
